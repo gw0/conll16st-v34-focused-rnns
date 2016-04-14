@@ -1,0 +1,7 @@
+.*
+*.pyc
+*.gz
+*.tgz
+/venv
+/data
+/ex*
