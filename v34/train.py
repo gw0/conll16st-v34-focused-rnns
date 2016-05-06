@@ -255,8 +255,9 @@ def c(k, d):
     log.debug("    config '{}': {} ({})".format(k, config.get(k, ""), d))
     return config.get(k, d)
 
-epochs = c('epochs', 2000)  #= 200 (for real epochs)
-epochs_len = c('epochs_len', 1024)  #= -1 (for real epochs)
+epochs = c('epochs', 200)  #= 200 (for real epochs)
+epochs_len = c('epochs_len', -1)  #= -1 (for real epochs)
+epochs_patience = c('epochs_patience', 10)  #=10 (for real epochs)
 batch_size = c('batch_size', 64)  #= 16
 snapshot_size = c('snapshot_size', 2000)
 #TODO
@@ -440,6 +441,7 @@ log.info("train model")
 callbacks = [
     ModelCheckpoint(monitor='loss', mode='min', filepath=weights_hdf5, save_best_only=True),
     ModelCheckpoint(monitor='val_loss', mode='min', filepath=weights_val_hdf5, save_best_only=True),
-    ]
+    EarlyStopping(monitor='val_loss', mode='min', patience=epochs_patience),
+]
 history = model.fit_generator(train_iter, nb_epoch=epochs, samples_per_epoch=epochs_len, validation_data=valid_snapshot, callbacks=callbacks, verbose=2)
 log.info("training finished")
