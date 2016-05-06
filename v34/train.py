@@ -313,8 +313,8 @@ rnn_dim = c('rnn_dim', 64)
 final_dim = c('final_dim', 64)
 arg1_len = c('arg1_len', 100)  #= 100 (en), 500 (zh)
 arg2_len = c('arg2_len', 100)  #= 100 (en), 500 (zh)
-conn_len = 10  #= 10 (en, zh)
-punc_len = 0  #=0 (en), 2 (zh)
+conn_len = c('conn_len', 10)  #= 10 (en, zh)
+punc_len = c('punc_len', 0)  #=0 (en), 2 (zh)
 words_dropout = c('words_dropout', 0.33)
 focus_dropout_W = c('focus_dropout_W', 0.33)
 focus_dropout_U = c('focus_dropout_U', 0.66)
@@ -357,6 +357,14 @@ arg1_ids = Input(shape=(arg1_len,), dtype='int32', name="arg1_ids")
 arg2_ids = Input(shape=(arg2_len,), dtype='int32', name="arg2_ids")
 # shape: (sample, arg2_len) of words2id_size
 
+# input: connective word/token ids
+conn_ids = Input(shape=(conn_len,), dtype='int32', name="conn_ids")
+# shape: (sample, conn_len) of words2id_size
+
+# input: punctuation word/token ids
+punc_ids = Input(shape=(punc_len,), dtype='int32', name="punc_ids")
+# shape: (sample, punc_len) of words2id_size
+
 def focused_rnns(arg1_ids):
     """One RNN decides focus weights for other RNNs."""
 
@@ -389,11 +397,13 @@ def focused_rnns(arg1_ids):
 # merge focused RNNs
 arg1_rnns = focused_rnns(arg1_ids)
 arg2_rnns = focused_rnns(arg2_ids)
+conn_rnns = focused_rnns(conn_ids)
+punc_rnns = focused_rnns(punc_ids)
 
 # dense layer with logistic regression on top
-x = merge(arg1_rnns + arg2_rnns, mode='concat')
+x = merge(arg1_rnns + arg2_rnns + conn_rnns + punc_rnns, mode='concat')
 x = Dense(final_dim)(x)
-x = SReLU()(x)
+x = TimeDistributed(SReLU())(x)
 x = Dropout(final_dropout)(x)
 # shape: (samples, 2*hidden_dim)
 x = Dense(rel_senses2id_size)(x)
