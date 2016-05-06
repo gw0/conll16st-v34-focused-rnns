@@ -16,6 +16,7 @@ import sys
 from keras.models import Model
 from keras.utils.visualize_util import plot
 from keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.layers import K
 
 from generic_utils import Tee, debugger, load_from_pkl, save_to_pkl, load_dict_of_np, save_dict_of_np
 from conll16st_data.load import Conll16stDataset
@@ -298,18 +299,17 @@ save_to_pkl(indexes_size_pkl, indexes_size)
 # build model
 log.info("build model")
 from keras.models import Sequential
-from keras.layers import Input, Embedding, RepeatVector, Reshape, TimeDistributed, Dense, merge, GRU, LSTM, Dropout, BatchNormalization, K, Permute, Merge, Activation, Lambda, InputSpec, Convolution2D, AveragePooling2D, MaxPooling2D, Flatten, Layer
+from keras.layers import Input, Embedding, RepeatVector, Reshape, TimeDistributed, Dense, merge, GRU, LSTM, Dropout, BatchNormalization, Permute, Merge, Activation, Lambda, InputSpec, Convolution2D, AveragePooling2D, MaxPooling2D, Flatten, Layer
 from keras.layers.advanced_activations import SReLU
-from theano import tensor as T
 
 import sys
 sys.setrecursionlimit(40000)
 
 words2id_size = indexes_size['words2id']
 rel_senses2id_size = indexes_size['rel_senses2id']
-words_dim = c('words_dim', 10)
-focus_dim = c('focus_dim', 2)
-rnn_dim = c('rnn_dim', 64)
+words_dim = c('words_dim', 20)
+focus_dim = c('focus_dim', 4)
+rnn_dim = c('rnn_dim', 32)
 final_dim = c('final_dim', 64)
 arg1_len = c('arg1_len', 100)  #= 100 (en), 500 (zh)
 arg2_len = c('arg2_len', 100)  #= 100 (en), 500 (zh)
@@ -403,14 +403,14 @@ punc_rnns = focused_rnns(punc_ids)
 # dense layer with logistic regression on top
 x = merge(arg1_rnns + arg2_rnns + conn_rnns + punc_rnns, mode='concat')
 x = Dense(final_dim)(x)
-x = TimeDistributed(SReLU())(x)
+x = SReLU()(x)
 x = Dropout(final_dropout)(x)
 # shape: (samples, 2*hidden_dim)
 x = Dense(rel_senses2id_size)(x)
 x = Activation('softmax', name='rsenses_imp')(x)
 # shape: (samples, rel_senses2id_size)
 
-inputs = [arg1_ids, arg2_ids]
+inputs = [arg1_ids, arg2_ids, conn_ids, punc_ids]
 outputs = [x]
 losses = {
     'rsenses_imp': c('rsenses_imp_loss', 'categorical_crossentropy'),
