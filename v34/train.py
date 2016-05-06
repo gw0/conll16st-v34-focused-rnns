@@ -265,6 +265,9 @@ filter_types = None
 #filter_types = ["Explicit"]
 #filter_types = ["Implicit", "EntRel", "AltLex"]
 
+for var in ['args.experiment_dir', 'args.train_dir', 'args.valid_dir', 'K._config', 'os.getenv("THEANO_FLAGS")', 'filter_types', 'config']:
+    log.info("  {}: {}".format(var, eval(var)))
+
 # load datasets
 log.info("load dataset for training ({})".format(args.train_dir))
 train = Conll16stDataset(args.train_dir, filter_types=filter_types)
