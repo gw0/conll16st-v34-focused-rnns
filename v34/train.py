@@ -498,10 +498,11 @@ log.info("training finished")
 
 # return best result for hyperopt
 results = {}
-min_val_loss = min(history.history['val_loss'])
-max_val_acc = max(history.history['val_acc'])
 for k in history.history:
     results[k] = history.history[k][-1]  # copy others
-results['loss'] = -max_val_acc  # minimized objective function
+results['val_loss_min'] = min(history.history['val_loss'])
+results['val_acc_max'] = max(history.history['val_acc'])
+results['loss_'] = results['loss']
+results['loss'] = -results['val_acc_max']  # objective for minimization
 results['status'] = 'ok'
 print("\n\n{}".format(json.dumps(results)))

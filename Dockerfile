@@ -1,7 +1,7 @@
 # Discourse relation sense classification (CoNLL16st).
 #
 # Example:
-#   PRE=conll16st-v3402 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
+#   PRE=conll16st-v3403 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
 #   DATAT=en-train DATAV=en-dev DATAX=en-trial CONFIG='"_":0'
 #     CONFIG='"words2vec_bin":"./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"'
 #   DATAT=zh-train DATAV=zh-dev DATAX=zh-trial CONFIG='"arg1_len":500, "arg2_len":500'
@@ -25,7 +25,8 @@ RUN git clone https://github.com/attapol/conll16st.git ./conll16st_evaluation
 ADD v34/ ./v34/
 RUN useradd -r -d /srv parser \
  && mkdir -p /srv/ex \
- && chown -R parser:parser /srv
+ && chown -R parser:parser /srv \
+ && ln -s /srv/v34/optimize_exec.py /usr/local/bin/
 
 #XXX: patch Keras
 ADD patch_topology.py /usr/local/lib/python2.7/dist-packages/keras/engine/topology.py
