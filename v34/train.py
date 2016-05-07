@@ -97,8 +97,10 @@ def pad_sequence(sequence, max_len, value=0, max_rand=None):
         raise ValueError("Padding value '{}' not understood".format(value))
     return x
 
-def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size):
+def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size, random_per_sample=1):
     """Batch generator where each sample represents a different discourse relation."""
+
+    batch_size /= 1 + random_per_sample
 
     rel_ids = list(dataset['rel_ids'])  # copy list
     while True:
@@ -166,6 +168,34 @@ def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size)
                 except KeyError:
                     data_out['rsenses_imp'] = [rsenses_imp]
 
+                # random noise for each sample
+                for _ in range(random_per_sample):
+                    j = np.random.randint(3)
+                    if j == 0:
+                        # random arg1
+                        arg1_np = np.random.randint(1, np.max(arg1_np), size=arg1_np.shape)
+                    elif j == 1:
+                        # random arg2
+                        arg2_np = np.random.randint(1, np.max(arg2_np), size=arg2_np.shape)
+                    else:
+                        # random arg1 and arg2
+                        arg1_np = np.random.randint(1, np.max(arg1_np), size=arg1_np.shape)
+                        arg2_np = np.random.randint(1, np.max(arg2_np), size=arg2_np.shape)
+                    # random connective
+                    if conn_np.shape[0] > 0 and np.max(conn_np) > 1:
+                        conn_np = np.random.randint(1, np.max(conn_np), size=conn_np.shape)
+                    # random punctuation
+                    if punc_np.shape[0] > 0 and np.max(punc_np) > 1:
+                        punc_np = np.random.randint(1, np.max(punc_np), size=punc_np.shape)
+                    # out-of-vocabulary in rsenses
+                    rsenses_imp = rsenses_np("")
+
+                    _rel_id.append(rel_id)
+                    data_in['arg1_ids'].append(arg1_np)
+                    data_in['arg2_ids'].append(arg2_np)
+                    data_in['conn_ids'].append(conn_np)
+                    data_in['punc_ids'].append(punc_np)
+                    data_out['rsenses_imp'].append(rsenses_imp)
 
             data_in['rand_ids'] = np.random.randint(1, np.max(arg1_np), size=(len(_rel_id), arg1_len))
 
@@ -261,6 +291,7 @@ epochs_len = c('epochs_len', -1)  #= -1 (for real epochs)
 epochs_patience = c('epochs_patience', 10)  #=10 (for real epochs)
 batch_size = c('batch_size', 64)  #= 16
 snapshot_size = c('snapshot_size', 2000)
+random_per_sample = c('random_per_sample', 1)
 #TODO
 
 filter_types = None
@@ -438,14 +469,14 @@ else:
 # prepare for training
 log.info("prepare snapshots")
 #if not os.path.isdir(train_snapshot_dir):
-train_snapshot = next(batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, min(len(train['rel_ids']), snapshot_size)))
+train_snapshot = next(batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, min(len(train['rel_ids']), snapshot_size, random_per_sample)))
 #    save_dict_of_np(train_snapshot_dir, train_snapshot)
 #train_snapshot = load_dict_of_np(train_snapshot_dir)
 #if not os.path.isdir(valid_snapshot_dir):
-valid_snapshot = next(batch_generator(valid, arg1_len, arg2_len, conn_len, punc_len, min(len(valid['rel_ids']), snapshot_size)))
+valid_snapshot = next(batch_generator(valid, arg1_len, arg2_len, conn_len, punc_len, min(len(valid['rel_ids']), snapshot_size, random_per_sample)))
 #    save_dict_of_np(valid_snapshot_dir, valid_snapshot)
 #valid_snapshot = load_dict_of_np(valid_snapshot_dir)
-train_iter = batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, batch_size)
+train_iter = batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, batch_size, random_per_sample)
 
 # train model
 log.info("train model")
