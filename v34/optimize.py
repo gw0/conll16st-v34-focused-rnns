@@ -66,7 +66,7 @@ args = argp.parse_args()
 space = {
     '_cmd': args.cmd,
     '_exp_key': args.exp_key,
-    'filter_fn_name': "conn_eq_0",  #!!!: "conn_eq_0", "conn_gt_0"
+    'filter_fn_name': "conn_gt_0",  #!!!: "conn_eq_0", "conn_gt_0"
     'epochs': 200,
     'epochs_len': -1,
     'epochs_patience': 10,

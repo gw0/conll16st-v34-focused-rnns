@@ -1,7 +1,7 @@
 # Discourse relation sense classification (CoNLL16st).
 #
 # Example:
-#   PRE=conll16st-v3403 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
+#   PRE=conll16st-v3404 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
 #   DATAT=en-train DATAV=en-dev DATAX=en-trial CONFIG='"_":0'
 #     CONFIG='"words2vec_bin":"./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"'
 #   DATAT=zh-train DATAV=zh-dev DATAX=zh-trial CONFIG='"arg1_len":500, "arg2_len":500'
@@ -16,7 +16,7 @@
 #     THEANO_FLAGS='device=gpu2,floatX=float32,nvcc.fastmath=True,lib.cnmem=1'
 #
 #   NAME=$PRE-optimizer
-#   docker $(weave config) run -d -m 100M --name $NAME $PRE ./v34/optimize.py optimizer --mongo=mongo://conll16st-mongo:27017/conll16st/jobs --exp-key=$PRE --evals=40 && echo -ne "\ek${NAME:10}\e\\" && docker logs -f $NAME
+#   docker $(weave config) run -d -m 100M --name $NAME $PRE ./v34/optimize.py optimizer --mongo=mongo://conll16st-mongo:27017/conll16st/jobs --exp-key=$PRE --evals=50 && echo -ne "\ek${NAME:10}\e\\" && docker logs -f $NAME
 #
 #   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; ssh -o StrictHostKeyChecking=no $ip "docker ps -af name=$PRE; docker images $PRE; ps aux | grep '[d]ocker build'; cd /srv/storage/conll16st/data; echo conll16st-*"; done
 #   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; if ssh -o StrictHostKeyChecking=no $ip "test \! -d /srv/storage/conll16st/data"; then echo "copying data..."; ssh -o StrictHostKeyChecking=no $ip "mkdir -p /srv/storage/conll16st /srv/storage/conll16st/ex /srv/storage/conll16st/data; chmod 777 /srv/storage/conll16st/ex"; scp -qr -o StrictHostKeyChecking=no /srv/storage/conll16st/data/* $ip:/srv/storage/conll16st/data; fi; done
