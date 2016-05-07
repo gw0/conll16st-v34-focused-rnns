@@ -309,8 +309,8 @@ words2id_size = indexes_size['words2id']
 rel_senses2id_size = indexes_size['rel_senses2id']
 words_dim = c('words_dim', 20)
 focus_dim = c('focus_dim', 4)
-rnn_dim = c('rnn_dim', 32)
-final_dim = c('final_dim', 64)
+rnn_dim = c('rnn_dim', 20)  #XXX: 32
+final_dim = c('final_dim', 40)  #XXX: 64
 arg1_len = c('arg1_len', 100)  #= 100 (en), 500 (zh)
 arg2_len = c('arg2_len', 100)  #= 100 (en), 500 (zh)
 conn_len = c('conn_len', 10)  #= 10 (en, zh)
@@ -348,6 +348,7 @@ def get_init_weights():
 
 init_weights = get_init_weights()
 
+shared_emb = Embedding(input_dim=words2id_size, output_dim=words_dim, weights=init_weights, dropout=words_dropout, mask_zero=True, name="shared_emb")
 
 # input: arg1 word/token ids
 arg1_ids = Input(shape=(arg1_len,), dtype='int32', name="arg1_ids")
@@ -369,7 +370,7 @@ def focused_rnns(arg1_ids):
     """One RNN decides focus weights for other RNNs."""
 
     # embed arg1 input sequence
-    arg1_emb = Embedding(input_dim=words2id_size, output_dim=words_dim, weights=init_weights, dropout=words_dropout, mask_zero=True)(arg1_ids)
+    arg1_emb = shared_emb(arg1_ids)
     # shape: (sample, arg1_len, words_dim)
 
     # focus weights for all RNNs
