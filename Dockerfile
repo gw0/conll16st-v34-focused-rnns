@@ -12,6 +12,8 @@
 #   docker run -d $DOCKER_ARGS --name $NAME $PRE ./v34/train.py ex/$NAME data/conll16st-$DATAT data/conll16st-$DATAV --clean --config="{\"words_dim\":20, $CONFIG}" && echo -ne "\ek${NAME:10}\e\\" && sleep 5 && less +F $PREDIR/ex/$NAME/console.log
 #     docker logs -f $NAME
 #     docker rm -f $NAME
+#     THEANO_FLAGS='mode=FAST_COMPILE'
+#     THEANO_FLAGS='device=gpu2,floatX=float32,nvcc.fastmath=True,lib.cnmem=1'
 #
 #   NAME=$PRE-optimizer
 #   docker $(weave config) run -d -m 100M --name $NAME $PRE ./v34/optimize.py optimizer --mongo=mongo://conll16st-mongo:27017/conll16st/jobs --exp-key=$PRE --evals=40 && echo -ne "\ek${NAME:10}\e\\" && docker logs -f $NAME

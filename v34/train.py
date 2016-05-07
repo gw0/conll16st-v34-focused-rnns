@@ -287,10 +287,10 @@ def c(k, d):
 
 epochs = int(c('epochs', 1000))  #= 200 (for real epochs)
 epochs_len = int(c('epochs_len', -1))  #= -1 (for real epochs)
-epochs_patience = int(c('epochs_patience', 10))  #=10 (for real epochs)
+epochs_patience = int(c('epochs_patience', 20))  #=10 (for real epochs)
 batch_size = int(c('batch_size', 64))  #= 16
 snapshot_size = int(c('snapshot_size', 2048))
-random_per_sample = int(c('random_per_sample', 1))  #=8
+random_per_sample = int(c('random_per_sample', 1))  #20-25?
 #TODO
 
 filter_types = None
@@ -348,18 +348,18 @@ words2id_size = indexes_size['words2id']
 rel_senses2id_size = indexes_size['rel_senses2id']
 words_dim = int(c('words_dim', 20))
 focus_dim = int(c('focus_dim', 4))
-rnn_dim = int(c('rnn_dim', 20))  #XXX: 32
-final_dim = int(c('final_dim', 40))  #XXX: 64
+rnn_dim = int(c('rnn_dim', 20))  #10-20?
+final_dim = int(c('final_dim', 100))  #XXX: 64
 arg1_len = int(c('arg1_len', 100))  #= 100 (en), 500 (zh)
 arg2_len = int(c('arg2_len', 100))  #= 100 (en), 500 (zh)
 conn_len = int(c('conn_len', 10))  #= 10 (en, zh)
 punc_len = int(c('punc_len', 2))  #=0 (en, but error), 2 (zh)
-words_dropout = c('words_dropout', 0.33)
-focus_dropout_W = c('focus_dropout_W', 0.33)
-focus_dropout_U = c('focus_dropout_U', 0.66)
-rnn_dropout_W = c('rnn_dropout_W', 0.33)
-rnn_dropout_U = c('rnn_dropout_U', 0.66)
-final_dropout = c('final_dropout', 0.5)
+words_dropout = c('words_dropout', 0.33)  #0-0.2?
+focus_dropout_W = c('focus_dropout_W', 0.33)  #0?
+focus_dropout_U = c('focus_dropout_U', 0.66)  #0?
+rnn_dropout_W = c('rnn_dropout_W', 0.33)  #0.6-0.8?
+rnn_dropout_U = c('rnn_dropout_U', 0.66)  #0-0.5?
+final_dropout = c('final_dropout', 0.5)  #0.4-0.9?
 
 # initialize weights with pre-trained word2vec embeddings
 words2vec_bin = c('words2vec_bin', None)  # en="./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"
@@ -502,6 +502,7 @@ for k in history.history:
     results[k] = history.history[k][-1]  # copy others
 results['val_loss_min'] = min(history.history['val_loss'])
 results['val_acc_max'] = max(history.history['val_acc'])
+results['epochs_len'] = len(history.history['loss'])
 results['loss_'] = results['loss']
 results['loss'] = -results['val_acc_max']  # objective for minimization
 results['status'] = 'ok'
