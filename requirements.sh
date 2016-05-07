@@ -49,6 +49,10 @@ cp patch_topology.py ./venv/lib/python2.7/site-packages/keras/engine/topology.py
 cp patch_training.py ./venv/lib/python2.7/site-packages/keras/engine/training.py
 cp patch_visualize_util.py ./venv/lib/python2.7/site-packages/keras/utils/visualize_util.py
 
+# for hyper-parameter optimization
+pip install git+http://github.com/vilcenzo/hyperopt.git
+pip install networkx pymongo
+
 # for development
 pip install pytest
 

@@ -285,12 +285,12 @@ def c(k, d):
     log.debug("    config '{}': {} ({})".format(k, config.get(k, ""), d))
     return config.get(k, d)
 
-epochs = c('epochs', 1000)  #= 200 (for real epochs)
-epochs_len = c('epochs_len', -1)  #= -1 (for real epochs)
-epochs_patience = c('epochs_patience', 10)  #=10 (for real epochs)
-batch_size = c('batch_size', 64)  #= 16
-snapshot_size = c('snapshot_size', 2048)
-random_per_sample = c('random_per_sample', 1)  #=8
+epochs = int(c('epochs', 1000))  #= 200 (for real epochs)
+epochs_len = int(c('epochs_len', -1))  #= -1 (for real epochs)
+epochs_patience = int(c('epochs_patience', 10))  #=10 (for real epochs)
+batch_size = int(c('batch_size', 64))  #= 16
+snapshot_size = int(c('snapshot_size', 2048))
+random_per_sample = int(c('random_per_sample', 1))  #=8
 #TODO
 
 filter_types = None
@@ -346,14 +346,14 @@ sys.setrecursionlimit(40000)
 
 words2id_size = indexes_size['words2id']
 rel_senses2id_size = indexes_size['rel_senses2id']
-words_dim = c('words_dim', 20)
-focus_dim = c('focus_dim', 4)
-rnn_dim = c('rnn_dim', 20)  #XXX: 32
-final_dim = c('final_dim', 40)  #XXX: 64
-arg1_len = c('arg1_len', 100)  #= 100 (en), 500 (zh)
-arg2_len = c('arg2_len', 100)  #= 100 (en), 500 (zh)
-conn_len = c('conn_len', 10)  #= 10 (en, zh)
-punc_len = c('punc_len', 2)  #=0 (en, but error), 2 (zh)
+words_dim = int(c('words_dim', 20))
+focus_dim = int(c('focus_dim', 4))
+rnn_dim = int(c('rnn_dim', 20))  #XXX: 32
+final_dim = int(c('final_dim', 40))  #XXX: 64
+arg1_len = int(c('arg1_len', 100))  #= 100 (en), 500 (zh)
+arg2_len = int(c('arg2_len', 100))  #= 100 (en), 500 (zh)
+conn_len = int(c('conn_len', 10))  #= 10 (en, zh)
+punc_len = int(c('punc_len', 2))  #=0 (en, but error), 2 (zh)
 words_dropout = c('words_dropout', 0.33)
 focus_dropout_W = c('focus_dropout_W', 0.33)
 focus_dropout_U = c('focus_dropout_U', 0.66)

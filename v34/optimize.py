@@ -55,10 +55,10 @@ argp.add_argument('--evals', type=int,
     default=10,
     help="maximal number of evaluations (for optimizer)")
 argp.add_argument('--cmd',
-    default="/srv/venv/bin/python /srv/v34/train.py /srv/ex/{exp_key}-{exp_hash} /srv/data/conll16st-en-train /srv/data/conll16st-en-dev --clean --config='{config_str}'",
+    default="/srv/v34/train.py /srv/ex/{exp_key}-{exp_hash} /srv/data/conll16st-en-train /srv/data/conll16st-en-dev --clean --config='{config_str}'",
     help="command for each experiment (for optimizer)")
 argp.add_argument('--worker-helper',
-    default="/srv/venv/bin/hyperopt-mongo-worker",
+    default="/usr/local/bin/hyperopt-mongo-worker",
     help="command for worker helper (for worker)")
 args = argp.parse_args()
 
@@ -66,7 +66,7 @@ args = argp.parse_args()
 space = {
     '_cmd': args.cmd,
     '_exp_key': args.exp_key,
-    'filter_fn_name': "conn_eq_0",
+    'filter_fn_name': "conn_eq_0",  #!!!: "conn_eq_0", "conn_gt_0"
     'epochs': 200,
     'epochs_len': -1,
     'epochs_patience': 10,
@@ -74,7 +74,7 @@ space = {
     #'snapshot_size': 2048,
     'random_per_sample': hp.quniform('random_per_sample', 1, 32, 1.),
     'words_dim': hp.quniform('words_dim', 10, 100, 10.),
-    'focus_dim': hp.quniform('focus_dim', 1, 32, 1.),
+    'focus_dim': hp.quniform('focus_dim', 2, 10, 1.),
     'rnn_dim': hp.quniform('rnn_dim', 10, 100, 10.),
     'final_dim': hp.quniform('final_dim', 10, 100, 10.),
     #'arg1_len': 100,
@@ -82,11 +82,11 @@ space = {
     #'conn_len': 10,
     #'punc_len': 2,
     'words_dropout': hp.uniform('words_dropout', 0.0, 1.0),
-    'focus_dropout_W': hp.uniform('focus_dropout_W', 0.0, 1.0),,
-    'focus_dropout_U': hp.uniform('focus_dropout_U', 0.0, 1.0),,
-    'rnn_dropout_W': hp.uniform('rnn_dropout_W', 0.0, 1.0),,
-    'rnn_dropout_U': hp.uniform('rnn_dropout_U', 0.0, 1.0),,
-    'final_dropout': hp.uniform('final_dropout', 0.0, 1.0),,
+    'focus_dropout_W': hp.uniform('focus_dropout_W', 0.0, 1.0),
+    'focus_dropout_U': hp.uniform('focus_dropout_U', 0.0, 1.0),
+    'rnn_dropout_W': hp.uniform('rnn_dropout_W', 0.0, 1.0),
+    'rnn_dropout_U': hp.uniform('rnn_dropout_U', 0.0, 1.0),
+    'final_dropout': hp.uniform('final_dropout', 0.0, 1.0),
     'words2vec_bin': None,
     'words2vec_txt': None,
     #'rsenses_imp_loss': "categorical_crossentropy",

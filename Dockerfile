@@ -12,12 +12,25 @@
 #   docker run -d $DOCKER_ARGS --name $NAME $PRE ./v34/train.py ex/$NAME data/conll16st-$DATAT data/conll16st-$DATAV --clean --config="{\"words_dim\":20, $CONFIG}" && echo -ne "\ek${NAME:10}\e\\" && sleep 5 && less +F $PREDIR/ex/$NAME/console.log
 #     docker logs -f $NAME
 #     docker rm -f $NAME
+#
+#   NAME=$PRE-optimizer
+#   docker $(weave config) run -d -m 100M --name $NAME $PRE ./v34/optimize.py optimizer --mongo=mongo://conll16st-mongo:27017/conll16st/jobs --exp-key=$PRE --evals=40 && echo -ne "\ek${NAME:10}\e\\" && docker logs -f $NAME
+#
+#   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; ssh -o StrictHostKeyChecking=no $ip "docker ps -af name=$PRE; docker images $PRE; ps aux | grep '[d]ocker build'; cd /srv/storage/conll16st/data; echo conll16st-*"; done
+#   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; if ssh -o StrictHostKeyChecking=no $ip "test \! -d /srv/storage/conll16st/data"; then echo "copying data..."; ssh -o StrictHostKeyChecking=no $ip "mkdir -p /srv/storage/conll16st /srv/storage/conll16st/ex /srv/storage/conll16st/data; chmod 777 /srv/storage/conll16st/ex"; scp -qr -o StrictHostKeyChecking=no /srv/storage/conll16st/data/* $ip:/srv/storage/conll16st/data; fi; done
+#   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; ssh -o StrictHostKeyChecking=no $ip "mkdir -p /srv/repos/conll16st-v30"; scp -qr -o StrictHostKeyChecking=no /srv/repos/conll16st-v30/* $ip:/srv/repos/conll16st-v30; ssh -o StrictHostKeyChecking=no $ip "nohup docker build -t $PRE /srv/repos/conll16st-v30 > /dev/null 2>&1 &"; done
+#   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; ssh -o StrictHostKeyChecking=no $ip "docker \$(weave config) run -d $DOCKER_ARGS --name $PRE-W$ip $PRE ./v34/optimize.py worker --mongo=mongo://conll16st-mongo:27017/conll16st --exp-key=$PRE"; done
+#   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; ssh -o StrictHostKeyChecking=no $ip "docker rm -f \$(docker ps -aqf name=$PRE-W*); rm -rf /srv/storage/conll16st/ex/*"; done
+#
+
 
 FROM gw000/keras:1.0.1-py2
 MAINTAINER gw0 [http://gw.tnode.com/] <gw.2016@tnode.com>
 
 # requirements (for project)
 RUN pip install gensim pattern
+RUN pip install git+http://github.com/vilcenzo/hyperopt.git
+RUN pip install networkx pymongo
 RUN git clone https://github.com/gw0/conll16st_data.git ./conll16st_data
 RUN git clone https://github.com/attapol/conll16st.git ./conll16st_evaluation
 
