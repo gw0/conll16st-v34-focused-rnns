@@ -106,7 +106,6 @@ def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size,
     while True:
         # shuffle relations on each epoch
         random.shuffle(rel_ids)
-
         for batch_start, batch_end in make_batches(len(rel_ids), batch_size):
 
             # prepare batch data
@@ -291,7 +290,7 @@ epochs_len = c('epochs_len', -1)  #= -1 (for real epochs)
 epochs_patience = c('epochs_patience', 10)  #=10 (for real epochs)
 batch_size = c('batch_size', 64)  #= 16
 snapshot_size = c('snapshot_size', 2048)
-random_per_sample = c('random_per_sample', 8)  #=8
+random_per_sample = c('random_per_sample', 1)  #=8
 #TODO
 
 filter_types = None
@@ -345,7 +344,7 @@ final_dim = c('final_dim', 40)  #XXX: 64
 arg1_len = c('arg1_len', 100)  #= 100 (en), 500 (zh)
 arg2_len = c('arg2_len', 100)  #= 100 (en), 500 (zh)
 conn_len = c('conn_len', 10)  #= 10 (en, zh)
-punc_len = c('punc_len', 0)  #=0 (en, but error), 2 (zh)
+punc_len = c('punc_len', 2)  #=0 (en, but error), 2 (zh)
 words_dropout = c('words_dropout', 0.33)
 focus_dropout_W = c('focus_dropout_W', 0.33)
 focus_dropout_U = c('focus_dropout_U', 0.66)
@@ -429,14 +428,8 @@ def focused_rnns(arg1_ids):
 # merge focused RNNs
 arg1_rnns = focused_rnns(arg1_ids)
 arg2_rnns = focused_rnns(arg2_ids)
-if conn_len > 0:
-    conn_rnns = focused_rnns(conn_ids)
-else:
-    conn_rnns = []
-if punc_len > 0:
-    punc_rnns = focused_rnns(punc_ids)
-else:
-    punc_rnns = []
+conn_rnns = focused_rnns(conn_ids)
+punc_rnns = focused_rnns(punc_ids)
 
 # dense layer with logistic regression on top
 x = merge(arg1_rnns + arg2_rnns + conn_rnns + punc_rnns, mode='concat')
@@ -448,11 +441,7 @@ x = Dense(rel_senses2id_size)(x)
 x = Activation('softmax', name='rsenses_imp')(x)
 # shape: (samples, rel_senses2id_size)
 
-inputs = [arg1_ids, arg2_ids]
-if conn_len > 0:
-    inputs.append(conn_ids)
-if punc_len > 0:
-    inputs.append(punc_ids)
+inputs = [arg1_ids, arg2_ids, conn_ids, punc_ids]
 outputs = [x]
 losses = {
     'rsenses_imp': c('rsenses_imp_loss', 'categorical_crossentropy'),
@@ -479,14 +468,14 @@ else:
 # prepare for training
 log.info("prepare snapshots")
 #if not os.path.isdir(train_snapshot_dir):
-train_snapshot = next(batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, min(len(train['rel_ids']), snapshot_size), random_per_sample))
+train_snapshot = next(batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, min(len(train['rel_ids']), snapshot_size), random_per_sample=0))
 #    save_dict_of_np(train_snapshot_dir, train_snapshot)
 #train_snapshot = load_dict_of_np(train_snapshot_dir)
 #if not os.path.isdir(valid_snapshot_dir):
-valid_snapshot = next(batch_generator(valid, arg1_len, arg2_len, conn_len, punc_len, min(len(valid['rel_ids']), snapshot_size), random_per_sample))
+valid_snapshot = next(batch_generator(valid, arg1_len, arg2_len, conn_len, punc_len, min(len(valid['rel_ids']), snapshot_size), random_per_sample=0))
 #    save_dict_of_np(valid_snapshot_dir, valid_snapshot)
 #valid_snapshot = load_dict_of_np(valid_snapshot_dir)
-train_iter = batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, batch_size, random_per_sample)
+train_iter = batch_generator(train, arg1_len, arg2_len, conn_len, punc_len, batch_size, random_per_sample=random_per_sample)
 
 # train model
 log.info("train model")
@@ -497,3 +486,13 @@ callbacks = [
 ]
 history = model.fit_generator(train_iter, nb_epoch=epochs, samples_per_epoch=epochs_len, validation_data=valid_snapshot, callbacks=callbacks, verbose=2)
 log.info("training finished")
+
+# return best result for hyperopt
+results = {}
+min_val_loss = min(history.history['val_loss'])
+max_val_acc = max(history.history['val_acc'])
+for k in history.history:
+    results[k] = history.history[k][-1]  # copy others
+results['loss'] = -max_val_acc  # minimized objective function
+results['status'] = 'ok'
+print("\n\n{}".format(json.dumps(results)))
