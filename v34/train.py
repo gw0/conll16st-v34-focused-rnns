@@ -345,7 +345,7 @@ final_dim = c('final_dim', 40)  #XXX: 64
 arg1_len = c('arg1_len', 100)  #= 100 (en), 500 (zh)
 arg2_len = c('arg2_len', 100)  #= 100 (en), 500 (zh)
 conn_len = c('conn_len', 10)  #= 10 (en, zh)
-punc_len = c('punc_len', 2)  #=0 (en, but error), 2 (zh)
+punc_len = c('punc_len', 0)  #=0 (en, but error), 2 (zh)
 words_dropout = c('words_dropout', 0.33)
 focus_dropout_W = c('focus_dropout_W', 0.33)
 focus_dropout_U = c('focus_dropout_U', 0.66)
@@ -429,8 +429,14 @@ def focused_rnns(arg1_ids):
 # merge focused RNNs
 arg1_rnns = focused_rnns(arg1_ids)
 arg2_rnns = focused_rnns(arg2_ids)
-conn_rnns = focused_rnns(conn_ids)
-punc_rnns = focused_rnns(punc_ids)
+if conn_len > 0:
+    conn_rnns = focused_rnns(conn_ids)
+else:
+    conn_rnns = []
+if punc_len > 0:
+    punc_rnns = focused_rnns(punc_ids)
+else:
+    punc_rnns = []
 
 # dense layer with logistic regression on top
 x = merge(arg1_rnns + arg2_rnns + conn_rnns + punc_rnns, mode='concat')
@@ -442,7 +448,11 @@ x = Dense(rel_senses2id_size)(x)
 x = Activation('softmax', name='rsenses_imp')(x)
 # shape: (samples, rel_senses2id_size)
 
-inputs = [arg1_ids, arg2_ids, conn_ids, punc_ids]
+inputs = [arg1_ids, arg2_ids]
+if conn_len > 0:
+    inputs.append(conn_ids)
+if punc_len > 0:
+    inputs.append(punc_ids)
 outputs = [x]
 losses = {
     'rsenses_imp': c('rsenses_imp_loss', 'categorical_crossentropy'),
