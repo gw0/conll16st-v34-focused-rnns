@@ -296,19 +296,28 @@ random_per_sample = c('random_per_sample', 1)  #=8
 filter_types = None
 #filter_types = ["Explicit"]
 #filter_types = ["Implicit", "EntRel", "AltLex"]
+filter_senses = None
+#filter_senses = ["Contingency.Condition"]
+filter_fn_name = c('filter_fn_name', "conn_eq_0")
+if filter_fn_name == "conn_eq_0":  # connective length equals 0
+    filter_fn = lambda r: len(r['Connective']['TokenList']) == 0
+elif filter_fn_name == "conn_gt_0":  # connective length greater than 0
+    filter_fn = lambda r: len(r['Connective']['TokenList']) > 0
+else:  # no filter
+    filter_fn = None
 
 for var in ['args.experiment_dir', 'args.train_dir', 'args.valid_dir', 'K._config', 'os.getenv("THEANO_FLAGS")', 'filter_types', 'config']:
     log.info("  {}: {}".format(var, eval(var)))
 
 # load datasets
 log.info("load dataset for training ({})".format(args.train_dir))
-train = Conll16stDataset(args.train_dir, filter_types=filter_types)
+train = Conll16stDataset(args.train_dir, filter_types=filter_types, filter_senses=filter_senses, filter_fn=filter_fn)
 log.info(train.summary())
 if epochs_len < 0:
     epochs_len = len(train['rel_ids'])
 
 log.info("load dataset for validation ({})".format(args.valid_dir))
-valid = Conll16stDataset(args.valid_dir, filter_types=filter_types)
+valid = Conll16stDataset(args.valid_dir, filter_types=filter_types, filter_senses=filter_senses, filter_fn=filter_fn)
 log.info(valid.summary())
 
 # build indexes
