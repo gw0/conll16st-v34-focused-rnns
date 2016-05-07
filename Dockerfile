@@ -1,15 +1,15 @@
 # Discourse relation sense classification (CoNLL16st).
 #
 # Example:
-#   PRE=conll16st-v3400 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
+#   PRE=conll16st-v3402 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
 #   DATAT=en-train DATAV=en-dev DATAX=en-trial CONFIG='"_":0'
 #     CONFIG='"words2vec_bin":"./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"'
 #   DATAT=zh-train DATAV=zh-dev DATAX=zh-trial CONFIG='"arg1_len":500, "arg2_len":500'
 #     CONFIG='"arg1_len":200, "arg2_len":200, "words2vec_txt":"./data/word2vec-zh/zh-Gigaword-300.txt"'
 #   docker build -t $PRE /srv/repos/conll16st-v30
 #
-#   NAME=$PRE-w40f4rd32-$DATAT
-#   docker run -d $DOCKER_ARGS --name $NAME $PRE ./v34/train.py ex/$NAME data/conll16st-$DATAT data/conll16st-$DATAV --clean --config="{\"words_dim\":40, \"focus_dim\":4, \"rnn_dim\":32, $CONFIG}" && echo -ne "\ek${NAME:10}\e\\" && sleep 5 && less +F $PREDIR/ex/$NAME/console.log
+#   NAME=$PRE-w20-$DATAT
+#   docker run -d $DOCKER_ARGS --name $NAME $PRE ./v34/train.py ex/$NAME data/conll16st-$DATAT data/conll16st-$DATAV --clean --config="{\"words_dim\":20, $CONFIG}" && echo -ne "\ek${NAME:10}\e\\" && sleep 5 && less +F $PREDIR/ex/$NAME/console.log
 #     docker logs -f $NAME
 #     docker rm -f $NAME
 
