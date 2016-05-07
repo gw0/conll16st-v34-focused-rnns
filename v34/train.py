@@ -286,12 +286,12 @@ def c(k, d):
     log.debug("    config '{}': {} ({})".format(k, config.get(k, ""), d))
     return config.get(k, d)
 
-epochs = c('epochs', 200)  #= 200 (for real epochs)
+epochs = c('epochs', 1000)  #= 200 (for real epochs)
 epochs_len = c('epochs_len', -1)  #= -1 (for real epochs)
 epochs_patience = c('epochs_patience', 10)  #=10 (for real epochs)
 batch_size = c('batch_size', 64)  #= 16
-snapshot_size = c('snapshot_size', 2000)
-random_per_sample = c('random_per_sample', 1)
+snapshot_size = c('snapshot_size', 2048)
+random_per_sample = c('random_per_sample', 8)  #=8
 #TODO
 
 filter_types = None
