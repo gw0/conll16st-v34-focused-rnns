@@ -23,7 +23,7 @@ from data_utils import batch_generator, decode_relation
 
 
 # logging
-sys.excepthook = debugger  # attach debugger
+#sys.excepthook = debugger  # attach debugger
 
 logging.basicConfig(format="[%(asctime)s] %(message)s", datefmt="%Y-%m-%d %H:%M", level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -215,6 +215,10 @@ if not os.path.isdir(args.output_dir):
     os.makedirs(args.output_dir)
 f_out = codecs.open(output_json, mode='a', encoding='utf8')
 
+fallback_rel_sense = None
+for rel_sense, i in indexes['rel_senses2id'].iteritems():
+    if i == 2:
+        fallback_rel_sense = rel_sense
 none_key = None
 oov_key = ""
 for rel_id, y_np in zip(x['_rel_id'], y):
@@ -222,7 +226,7 @@ for rel_id, y_np in zip(x['_rel_id'], y):
 
     if rel_sense == none_key or rel_sense == oov_key:
         # fallback for out-of-vocabulary
-        rel_sense = indexes['rel_senses2id'][2]
+        rel_sense = fallback_rel_sense
         print "fallback {} to '{}' ({})".format(rel_id, rel_sense, totals)  #XXX
 
     # relation output format
