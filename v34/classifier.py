@@ -209,24 +209,60 @@ x, _ = next(batch_generator(dataset, indexes, indexes_size, arg1_len, arg2_len, 
 log.info("make predictions")
 y = model.predict(x, batch_size=batch_size)
 
+# valid outputs
+RELATION_TYPES = ['Explicit', 'Implicit', 'AltLex', 'EntRel', 'NoRel']
+if args.lang == "en":
+    SENSES = [
+        'Expansion.Conjunction',  # most common
+        'Temporal.Asynchronous.Precedence',
+        'Temporal.Asynchronous.Succession',
+        'Temporal.Synchrony',
+        'Contingency.Cause.Reason',
+        'Contingency.Cause.Result',
+        'Contingency.Condition',
+        'Comparison.Contrast',
+        'Comparison.Concession',
+        'Expansion.Instantiation',
+        'Expansion.Restatement',
+        'Expansion.Alternative',
+        'Expansion.Alternative.Chosen alternative',
+        'Expansion.Exception',
+        'EntRel',
+    ]
+elif args.lang == "zh":
+    SENSES = [
+        'Conjunction',  # most common
+        'Alternative',
+        'Causation',
+        'Conditional',
+        'Contrast',
+        'EntRel',
+        'Expansion',
+        'Progression',
+        'Purpose',
+        'Temporal',
+    ]
+
 # convert to CoNLL16st output format
 log.info("convert predictions ({})".format(args.output_dir))
 if not os.path.isdir(args.output_dir):
     os.makedirs(args.output_dir)
 f_out = codecs.open(output_json, mode='a', encoding='utf8')
 
-fallback_rel_sense = None
-for rel_sense, i in indexes['rel_senses2id'].iteritems():
-    if i == 2:
-        fallback_rel_sense = rel_sense
 none_key = None
 oov_key = ""
 for rel_id, y_np in zip(x['_rel_id'], y):
     rel_sense, totals = decode_relation(y_np, indexes['rel_senses2id'], indexes_size['rel_senses2id'])
 
-    if rel_sense == none_key or rel_sense == oov_key:
-        # fallback for out-of-vocabulary
-        rel_sense = fallback_rel_sense
+    if rel_sense not in SENSES:
+        # fallback for invalid senses
+        if rel_sense != none_key and rel_sense != oov_key:
+            for s in SENSES:
+                if s.startswith(rel_sense):  # first matching lower level sense
+                    rel_sense = s
+                    break
+        if rel_sense not in SENSES:
+            rel_sense = SENSES[0]
         print "fallback {} to '{}' ({})".format(rel_id, rel_sense, totals)  #XXX
 
     # relation output format
