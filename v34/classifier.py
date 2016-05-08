@@ -235,7 +235,7 @@ for rel_id, y_np in zip(x['_rel_id'], y):
         'PunctuationType': rel_part['PunctuationType'],
         'DocID': rel_part['DocID'],
         'ID': rel_id,
-        'Type': 'Dummy',
+        'Type': 'Explicit',  # dummy, will be overwritten
         'Sense': [rel_sense],
     }
     f_out.write(json.dumps(rel) + "\n")
