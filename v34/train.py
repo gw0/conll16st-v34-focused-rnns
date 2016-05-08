@@ -19,8 +19,8 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.layers import Input, Embedding, TimeDistributed, Dense, merge, GRU, Dropout, Activation, Lambda, K
 from keras.layers.advanced_activations import SReLU
 
-from generic_utils import Tee, debugger, load_from_pkl, save_to_pkl
 from conll16st_data.load import Conll16stDataset
+from generic_utils import Tee, debugger, load_from_pkl, save_to_pkl
 from data_utils import build_index, batch_generator, load_word2vec
 
 
@@ -122,7 +122,7 @@ else:  # no filter
 words2vec_bin = c('words2vec_bin', None)  # en="./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"
 words2vec_txt = c('words2vec_txt', None)  # zh="./data/word2vec-zh/zh-Gigaword-300.txt"
 
-for var in ['args.experiment_dir', 'args.train_dir', 'args.valid_dir', 'K._config', 'os.getenv("THEANO_FLAGS")', 'filter_types', 'config']:
+for var in ['args.experiment_dir', 'args.train_dir', 'args.valid_dir', 'K._config', 'os.getenv("THEANO_FLAGS")', 'filter_types', 'filter_senses', 'filter_fn_name', 'config']:
     log.info("  {}: {}".format(var, eval(var)))
 
 # load datasets
