@@ -148,7 +148,10 @@ def batch_generator(dataset, indexes, indexes_size, arg1_len, arg2_len, conn_len
                     x_np[i] = 1
                     return x_np
 
-                rsenses = rsenses_np(dataset['rel_senses'][rel_id])
+                if dataset['rel_senses']:
+                    rsenses = rsenses_np(dataset['rel_senses'][rel_id])
+                else:
+                    rsenses = rsenses_np("")
                 try:
                     data_out['rsenses'].append(rsenses)
                 except KeyError:
