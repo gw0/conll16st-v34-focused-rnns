@@ -55,7 +55,7 @@ argp.add_argument('--evals', type=int,
     default=10,
     help="maximal number of evaluations (for optimizer)")
 argp.add_argument('--cmd',
-    default="/srv/v34/train.py /srv/ex/{exp_key}-{exp_hash} /srv/data/conll16st-en-train /srv/data/conll16st-en-dev --clean --config='{config_str}'",
+    default="/srv/v34/train.py /srv/ex/{exp_key}-{exp_hash} /srv/data/conll16st-zh-train /srv/data/conll16st-zh-dev --clean --config='{config_str}'",
     help="command for each experiment (for optimizer)")
 argp.add_argument('--worker-helper',
     default="/usr/local/bin/hyperopt-mongo-worker",
@@ -77,8 +77,8 @@ space = {
     'focus_dim': hp.quniform('focus_dim', 2, 8, 1.),
     'rnn_dim': hp.quniform('rnn_dim', 10, 100, 10.),
     'final_dim': hp.quniform('final_dim', 10, 100, 10.),
-    #'arg1_len': 100,
-    #'arg2_len': 100,
+    'arg1_len': 500,  #= 100 (en), 500 (zh)
+    'arg2_len': 500,  #= 100 (en), 500 (zh)
     #'conn_len': 10,
     #'punc_len': 2,
     'words_dropout': hp.quniform('words_dropout', 0.0, 1.0, 0.25),
@@ -86,7 +86,7 @@ space = {
     'focus_dropout_U': hp.quniform('focus_dropout_U', 0.0, 1.0, 0.25),
     'rnn_dropout_W': hp.quniform('rnn_dropout_W', 0.0, 1.0, 0.25),
     'rnn_dropout_U': hp.quniform('rnn_dropout_U', 0.0, 1.0, 0.25),
-    'final_dropout': hp.quniform('final_dropout', 0.0, 1.0),
+    'final_dropout': hp.quniform('final_dropout', 0.0, 1.0, 0.25),
     'words2vec_bin': None,
     'words2vec_txt': None,
     #'rsenses_imp_loss': "categorical_crossentropy",

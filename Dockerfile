@@ -1,7 +1,7 @@
 # Discourse relation sense classification (CoNLL16st).
 #
 # Example:
-#   PRE=conll16st-v3404 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
+#   PRE=conll16st-v3405 PREDIR=/srv/storage/conll16st MEM=9000M DOCKER_ARGS="-m $MEM --memory-swap $MEM -v $PREDIR/data:/srv/data -v $PREDIR/ex:/srv/ex"
 #   DATAT=en-train DATAV=en-dev DATAX=en-trial CONFIG='"_":0'
 #     CONFIG='"words2vec_bin":"./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"'
 #   DATAT=zh-train DATAV=zh-dev DATAX=zh-trial CONFIG='"arg1_len":500, "arg2_len":500'
