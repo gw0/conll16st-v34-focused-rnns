@@ -196,6 +196,24 @@ def batch_generator(dataset, indexes, indexes_size, arg1_len, arg2_len, conn_len
             yield (data_in, data_out)
 
 
+def decode_relation(y_np, cats2id, cats2id_size):
+    """Decode categories from one-hot vector (sample, cats2id)."""
+
+    # normalize by rows to [0,1] interval
+    y_sum = np.sum(y_np)
+    totals = y_np / y_sum
+    totals[y_sum == 0.] = y_np[y_sum == 0.]  # prevent NaN
+
+    # return most probable category
+    cat = None
+    max_total = -1.
+    for t, j in cats2id.items():
+        if totals[j] > max_total:
+            max_total = totals[j]
+            cat = t
+    return cat, totals
+
+
 def load_word2vec(words2id, words2id_size, words_dim, words2vec_bin=None, words2vec_txt=None):
     if not words2vec_bin and not words2vec_txt:
         return None  # no pre-trained word embeddings
