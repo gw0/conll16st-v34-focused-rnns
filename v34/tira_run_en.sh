@@ -9,6 +9,7 @@
 # Author: gw0 [http://gw.tnode.com/] <gw.2016@tnode.com>
 # License: All rights reserved
 
+lang="en"
 dataset_dir="$1"
 output_dir="$2"
 model_ceq0_dir='./models-v34/conll16st-v3403-8c72dacfe3cce1d3f8889ccdbe197993'
@@ -22,13 +23,13 @@ cd ..
 
 echo
 echo "=== running on conn_eq_0 ==="
-echo "./v34/classifier.py $model_ceq0_dir $dataset_dir $output_dir $config_ceq0"
-./v34/classifier.py "$model_ceq0_dir" "$dataset_dir" "$output_dir" "$config_ceq0"
+echo "./v34/classifier.py $lang $model_ceq0_dir $dataset_dir $output_dir $config_ceq0"
+./v34/classifier.py "$lang" "$model_ceq0_dir" "$dataset_dir" "$output_dir" "$config_ceq0"
 
 echo
 echo "=== running on conn_gt_0 ==="
-echo "./v34/classifier.py $model_cgt0_dir $dataset_dir $output_dir $config_cgt0"
-./v34/classifier.py "$model_cgt0_dir" "$dataset_dir" "$output_dir" "$config_cgt0"
+echo "./v34/classifier.py $lang $model_cgt0_dir $dataset_dir $output_dir $config_cgt0"
+./v34/classifier.py "$lang" "$model_cgt0_dir" "$dataset_dir" "$output_dir" "$config_cgt0"
 
 echo
 echo "Finished"

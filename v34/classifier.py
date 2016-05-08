@@ -30,6 +30,8 @@ log = logging.getLogger(__name__)
 
 # parse arguments
 argp = argparse.ArgumentParser(description=__doc__.strip().split("\n", 1)[0])
+argp.add_argument('lang',
+    help="language of dataset (for producing valid outputs)")
 argp.add_argument('model_dir',
     help="directory of the pre-trained model and other resources")
 argp.add_argument('dataset_dir',
@@ -210,7 +212,7 @@ log.info("make predictions")
 y = model.predict(x, batch_size=batch_size)
 
 # valid outputs
-RELATION_TYPES = ['Explicit', 'Implicit', 'AltLex', 'EntRel', 'NoRel']
+TYPES = ['Explicit', 'Implicit', 'AltLex', 'EntRel', 'NoRel']
 if args.lang == "en":
     SENSES = [
         'Expansion.Conjunction',  # most common
@@ -275,7 +277,7 @@ for rel_id, y_np in zip(x['_rel_id'], y):
         'PunctuationType': rel_part['PunctuationType'],
         'DocID': rel_part['DocID'],
         'ID': rel_id,
-        'Type': 'Explicit',  # dummy, will be overwritten
+        'Type': TYPES[0],  # dummy, will be overwritten
         'Sense': [rel_sense],
     }
     f_out.write(json.dumps(rel) + "\n")
