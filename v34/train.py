@@ -16,9 +16,10 @@ import sys
 from keras.models import Model
 from keras.utils.visualize_util import plot
 from keras.callbacks import ModelCheckpoint, EarlyStopping
-from keras.layers import K
+from keras.layers import Input, Embedding, TimeDistributed, Dense, merge, GRU, Dropout, Activation, Lambda, K
+from keras.layers.advanced_activations import SReLU
 
-from generic_utils import Tee, debugger, load_from_pkl, save_to_pkl, load_dict_of_np, save_dict_of_np
+from generic_utils import Tee, debugger, load_from_pkl, save_to_pkl
 from conll16st_data.load import Conll16stDataset
 
 
@@ -151,7 +152,7 @@ def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size,
                 except KeyError:
                     data_in['punc_ids'] = [punc_np]
 
-                # rsenses
+                # relation senses output
                 def rsenses_np(cat, oov_key=""):
                     try:
                         i = indexes['rel_senses2id'][cat]
@@ -161,11 +162,11 @@ def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size,
                     x_np[i] = 1
                     return x_np
 
-                rsenses_imp = rsenses_np(dataset['rel_senses'][rel_id])
+                rsenses = rsenses_np(dataset['rel_senses'][rel_id])
                 try:
-                    data_out['rsenses_imp'].append(rsenses_imp)
+                    data_out['rsenses'].append(rsenses)
                 except KeyError:
-                    data_out['rsenses_imp'] = [rsenses_imp]
+                    data_out['rsenses'] = [rsenses]
 
                 # random noise for each sample
                 for _ in range(random_per_sample):
@@ -186,32 +187,15 @@ def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size,
                     # random punctuation
                     if np.max(punc_np) > 0:
                         punc_np = np.random.randint(1, 1 + np.max(punc_np), size=punc_np.shape)
-                    # out-of-vocabulary in rsenses
-                    rsenses_imp = rsenses_np("")
+                    # mark as out-of-vocabulary in rsenses
+                    rsenses = rsenses_np("")
 
                     _rel_id.append(rel_id)
                     data_in['arg1_ids'].append(arg1_np)
                     data_in['arg2_ids'].append(arg2_np)
                     data_in['conn_ids'].append(conn_np)
                     data_in['punc_ids'].append(punc_np)
-                    data_out['rsenses_imp'].append(rsenses_imp)
-
-            data_in['rand_ids'] = np.random.randint(1, 1 + np.max(arg1_np), size=(len(_rel_id), arg1_len))
-
-            data_out['arg1_arg1_dot'] = np.ones((len(_rel_id), arg1_len))
-            data_out['arg1_rand_dot'] = np.zeros((len(_rel_id), arg1_len))
-            data_out['arg2_arg2_dot'] = np.ones((len(_rel_id), arg2_len))
-            data_out['arg2_rand_dot'] = np.zeros((len(_rel_id), arg2_len))
-
-            data_out['arg1dec_arg1_dot'] = np.ones((len(_rel_id), arg1_len))
-            data_out['arg1dec_rand_dot'] = np.zeros((len(_rel_id), arg1_len))
-            data_out['arg2dec_arg2_dot'] = np.ones((len(_rel_id), arg2_len))
-            data_out['arg2dec_rand_dot'] = np.zeros((len(_rel_id), arg2_len))
-
-            data_out['arg1dec_arg1dec_dot'] = np.ones((len(_rel_id), arg1_len))
-            data_out['arg1dec_randdec_dot'] = np.zeros((len(_rel_id), arg1_len))
-            data_out['arg2dec_arg2dec_dot'] = np.ones((len(_rel_id), arg2_len))
-            data_out['arg2dec_randdec_dot'] = np.zeros((len(_rel_id), arg2_len))
+                    data_out['rsenses'].append(rsenses)
 
             # convert to NumPy array
             for k, v in data_in.items():
@@ -224,6 +208,26 @@ def batch_generator(dataset, arg1_len, arg2_len, conn_len, punc_len, batch_size,
 
             # yield batch
             yield (data_in, data_out)
+
+def load_word2vec(words2id, words2id_size, words_dim, words2vec_bin=None, words2vec_txt=None):
+    if not words2vec_bin and not words2vec_txt:
+        return None  # no pre-trained word embeddings
+
+    import numpy as np
+    from gensim.models import word2vec
+    if words2vec_bin:
+        model = word2vec.Word2Vec.load_word2vec_format(words2vec_bin, binary=True)
+    else:
+        model = word2vec.Word2Vec.load_word2vec_format(words2vec_txt)
+    init_weights = np.zeros((words2id_size, words_dim), dtype=np.float32)
+    for k, i in words2id.iteritems():
+        if not isinstance(k, str):
+            continue
+        try:
+            init_weights[i] = model[k][:words_dim]
+        except KeyError:  # missing in word2vec
+            pass
+    return [init_weights]
 
 
 # logging
@@ -290,8 +294,22 @@ epochs_len = int(c('epochs_len', -1))  #= -1 (for real epochs)
 epochs_patience = int(c('epochs_patience', 20))  #=10 (for real epochs)
 batch_size = int(c('batch_size', 64))  #= 16
 snapshot_size = int(c('snapshot_size', 2048))
-random_per_sample = int(c('random_per_sample', 1))  #20-25?
-#TODO
+random_per_sample = int(c('random_per_sample', 32))
+
+words_dim = int(c('words_dim', 20))
+focus_dim = int(c('focus_dim', 4))  #3-6?
+rnn_dim = int(c('rnn_dim', 20))  #10-20?
+final_dim = int(c('final_dim', 100))
+arg1_len = int(c('arg1_len', 100))  #= 100 (en), 500 (zh)
+arg2_len = int(c('arg2_len', 100))  #= 100 (en), 500 (zh)
+conn_len = int(c('conn_len', 10))  #= 10 (en, zh)
+punc_len = int(c('punc_len', 2))  #=0 (en, but error), 2 (zh)
+words_dropout = c('words_dropout', 0.33)  #0-0.2?
+focus_dropout_W = c('focus_dropout_W', 0.33)  #0?, >0.5?
+focus_dropout_U = c('focus_dropout_U', 0.66)  #0?, irrelevant?
+rnn_dropout_W = c('rnn_dropout_W', 0.33)  #0.6-0.8?, irrelevant?
+rnn_dropout_U = c('rnn_dropout_U', 0.66)  #0-0.5?
+final_dropout = c('final_dropout', 0.5)  #0.4-0.9?, <0.5?
 
 filter_types = None
 #filter_types = ["Explicit"]
@@ -305,6 +323,10 @@ elif filter_fn_name == "conn_gt_0":  # connective length greater than 0
     filter_fn = lambda r: len(r['Connective']['TokenList']) > 0
 else:  # no filter
     filter_fn = None
+
+# initialize weights with pre-trained word2vec embeddings
+words2vec_bin = c('words2vec_bin', None)  # en="./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"
+words2vec_txt = c('words2vec_txt', None)  # zh="./data/word2vec-zh/zh-Gigaword-300.txt"
 
 for var in ['args.experiment_dir', 'args.train_dir', 'args.valid_dir', 'K._config', 'os.getenv("THEANO_FLAGS")', 'filter_types', 'config']:
     log.info("  {}: {}".format(var, eval(var)))
@@ -335,57 +357,12 @@ log.info("  " + ", ".join([ "{}: {}".format(k, v) for k, v in indexes_size.items
 save_to_pkl(indexes_pkl, indexes)
 save_to_pkl(indexes_size_pkl, indexes_size)
 
+init_weights = load_word2vec(indexes['words2id'], indexes_size['words2id'], words_dim, words2vec_bin, words2vec_txt)
+
 # build model
 log.info("build model")
-from keras.models import Sequential
-from keras.layers import Input, Embedding, RepeatVector, Reshape, TimeDistributed, Dense, merge, GRU, LSTM, Dropout, BatchNormalization, Permute, Merge, Activation, Lambda, InputSpec, Convolution2D, AveragePooling2D, MaxPooling2D, Flatten, Layer
-from keras.layers.advanced_activations import SReLU
-
-import sys
-sys.setrecursionlimit(40000)
-
 words2id_size = indexes_size['words2id']
 rel_senses2id_size = indexes_size['rel_senses2id']
-words_dim = int(c('words_dim', 20))
-focus_dim = int(c('focus_dim', 4))
-rnn_dim = int(c('rnn_dim', 20))  #10-20?
-final_dim = int(c('final_dim', 100))  #XXX: 64
-arg1_len = int(c('arg1_len', 100))  #= 100 (en), 500 (zh)
-arg2_len = int(c('arg2_len', 100))  #= 100 (en), 500 (zh)
-conn_len = int(c('conn_len', 10))  #= 10 (en, zh)
-punc_len = int(c('punc_len', 2))  #=0 (en, but error), 2 (zh)
-words_dropout = c('words_dropout', 0.33)  #0-0.2?
-focus_dropout_W = c('focus_dropout_W', 0.33)  #0?
-focus_dropout_U = c('focus_dropout_U', 0.66)  #0?
-rnn_dropout_W = c('rnn_dropout_W', 0.33)  #0.6-0.8?
-rnn_dropout_U = c('rnn_dropout_U', 0.66)  #0-0.5?
-final_dropout = c('final_dropout', 0.5)  #0.4-0.9?
-
-# initialize weights with pre-trained word2vec embeddings
-words2vec_bin = c('words2vec_bin', None)  # en="./data/word2vec-en/GoogleNews-vectors-negative300.bin.gz"
-words2vec_txt = c('words2vec_txt', None)  # zh="./data/word2vec-zh/zh-Gigaword-300.txt"
-
-def get_init_weights():
-    if not words2vec_bin and not words2vec_txt:
-        return None
-
-    import numpy as np
-    from gensim.models import word2vec
-    if words2vec_bin:
-        model = word2vec.Word2Vec.load_word2vec_format(words2vec_bin, binary=True)
-    else:
-        model = word2vec.Word2Vec.load_word2vec_format(words2vec_txt)
-    init_weights = np.zeros((words2id_size, words_dim), dtype=np.float32)
-    for k, i in indexes['words2id'].iteritems():
-        if not isinstance(k, str):
-            continue
-        try:
-            init_weights[i] = model[k][:words_dim]
-        except KeyError:  # missing in word2vec
-            pass
-    return [init_weights]
-
-init_weights = get_init_weights()
 
 shared_emb = Embedding(input_dim=words2id_size, output_dim=words_dim, weights=init_weights, dropout=words_dropout, mask_zero=True, name="shared_emb")
 
@@ -447,16 +424,16 @@ x = SReLU()(x)
 x = Dropout(final_dropout)(x)
 # shape: (samples, 2*hidden_dim)
 x = Dense(rel_senses2id_size)(x)
-x = Activation('softmax', name='rsenses_imp')(x)
+x = Activation('softmax', name='rsenses')(x)
 # shape: (samples, rel_senses2id_size)
 
 inputs = [arg1_ids, arg2_ids, conn_ids, punc_ids]
 outputs = [x]
 losses = {
-    'rsenses_imp': c('rsenses_imp_loss', 'categorical_crossentropy'),
+    'rsenses': c('rsenses_loss', 'categorical_crossentropy'),
 }
 metrics = {
-    'rsenses_imp': ['accuracy', 'loss'],
+    'rsenses': ['accuracy', 'loss'],
 }
 model = Model(input=inputs, output=outputs)
 plot(model, to_file=model_png, show_shapes=True)
@@ -472,7 +449,6 @@ if not os.path.isfile(weights_hdf5):
 else:
     log.info("previous weights ({})".format(args.experiment_dir))
     model.load_weights(weights_hdf5)
-
 
 # prepare for training
 log.info("prepare snapshots")
@@ -500,6 +476,8 @@ log.info("training finished")
 results = {}
 for k in history.history:
     results[k] = history.history[k][-1]  # copy others
+results['loss_min'] = min(history.history['loss'])
+results['acc_max'] = max(history.history['acc'])
 results['val_loss_min'] = min(history.history['val_loss'])
 results['val_acc_max'] = max(history.history['val_acc'])
 results['epochs_len'] = len(history.history['loss'])
