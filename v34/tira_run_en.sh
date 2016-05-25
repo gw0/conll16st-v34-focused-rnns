@@ -22,12 +22,12 @@ cd ..
 . venv/bin/activate
 
 echo
-echo "=== running on conn_eq_0 ==="
+echo "=== running with no conn_eq_0 ==="
 echo "./v34/classifier.py $lang $model_ceq0_dir $dataset_dir $output_dir $config_ceq0"
 ./v34/classifier.py "$lang" "$model_ceq0_dir" "$dataset_dir" "$output_dir" "$config_ceq0"
 
 echo
-echo "=== running on conn_gt_0 ==="
+echo "=== running with no conn_gt_0 ==="
 echo "./v34/classifier.py $lang $model_cgt0_dir $dataset_dir $output_dir $config_cgt0"
 ./v34/classifier.py "$lang" "$model_cgt0_dir" "$dataset_dir" "$output_dir" "$config_cgt0"
 

@@ -111,9 +111,9 @@ filter_types = None
 filter_senses = None
 #filter_senses = ["Contingency.Condition"]
 filter_fn_name = c('filter_fn_name', "conn_eq_0")
-if filter_fn_name == "conn_eq_0":  # connective length equals 0
+if filter_fn_name == "conn_eq_0":  # connective length not equals 0
     filter_fn = lambda r: len(r['Connective']['TokenList']) == 0
-elif filter_fn_name == "conn_gt_0":  # connective length greater than 0
+elif filter_fn_name == "conn_gt_0":  # connective length not greater than 0
     filter_fn = lambda r: len(r['Connective']['TokenList']) > 0
 else:  # no filter
     filter_fn = None
