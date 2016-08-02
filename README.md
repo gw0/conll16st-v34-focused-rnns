@@ -1,17 +1,17 @@
-conll16st-multi-classifier-v30
-==============================
+conll16st-v34-focused-rnns
+==========================
 
-Experiments for CoNLL 2016 Supplementary Task (shallow discourse sense classification) involving deep intermediate/layer-wise multi-task learning using shared representations and bidirectional GRU layers in Keras.
+System implementation of the paper Discourse Sense Classification from Scratch using Focused RNNs (presented at CoNLL 2016 conference). Implemented in Python 2 using Numpy, Theano and Keras.
 
-**Note:** Unfortunately this does **NOT** work yet, but development will continue!
+**Note:** Same implementation was used on English and Chinese datasets. It achieved new state-of-the-art on Chinese blind dataset.
 
 - <http://www.cs.brandeis.edu/~clp/conll16st/>
 - <http://github.com/attapol/conll16st/>
-- <http://github.com/gw0/conll16st-multi-classifier-v30/>
+- <http://github.com/gw0/conll16st-v34-focused-rnns/>
 
-If you find anything useful, consider citing a **related conference paper**:
+Consider citing the **conference paper**:
 
-- <http://gw.tnode.com/deep-learning/acl2015-learning-representations-for-text-level-discourse-parsing/>
+- <http://gw.tnode.com/deep-learning/conll2016-discourse-sense-classification-from-scratch-using-focused-rnns/>
 
 
 License

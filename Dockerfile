@@ -15,6 +15,8 @@
 #     THEANO_FLAGS='mode=FAST_COMPILE'
 #     THEANO_FLAGS='device=gpu2,floatX=float32,nvcc.fastmath=True,lib.cnmem=1'
 #
+#     docker $(weave config) run -d -v /srv/storage/conll16st/mongo/:/data/db --name conll16st-mongo mongo:3.2
+#     docker $(weave config) run -d -m 100M -v $PREDIR/.ssh:/root/.ssh -v $PREDIR/crontab:/etc/crontab -v $PREDIR/ex:/data --name conll16st-rsync gw000/periodic-rsync cron -f
 #   NAME=$PRE-optimizer
 #   docker $(weave config) run -d -m 100M --name $NAME $PRE ./v34/optimize.py optimizer --mongo=mongo://conll16st-mongo:27017/conll16st/jobs --exp-key=$PRE --evals=50 && echo -ne "\ek${NAME:10}\e\\" && docker logs -f $NAME
 #
@@ -25,11 +27,11 @@
 #   for ip in $(weave dns-lookup docker-vm); do echo -e "\n\n=== docker-vm : $ip ==="; ssh -o StrictHostKeyChecking=no $ip "docker rm -f \$(docker ps -aqf name=$PRE-W*); rm -rf /srv/storage/conll16st/ex/*"; done
 #
 
-
-FROM gw000/keras:1.0.1-py2
+FROM gw000/keras:1.0.1-py2-th-cpu
 MAINTAINER gw0 [http://gw.tnode.com/] <gw.2016@tnode.com>
 
 # requirements (for project)
+RUN pip install wheel
 RUN pip install gensim pattern
 RUN pip install git+http://github.com/vilcenzo/hyperopt.git
 RUN pip install networkx pymongo
