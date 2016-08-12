@@ -1,0 +1,54 @@
+python2.7 tira_sup_eval.py /media/training-datasets-truth/discourse-relation-sense-classification/conll16-st-dev-zh-2016-01-08 /tmp/gw0-2016-05-08-22-03-39/output /tmp/2016-05-08-22-16-11/output
+
+
+Evaluation for all discourse relations
+Explicit connectives         : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg 1 extractor              : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg 2 extractor              : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg1 Arg2 extractor combined : Precision 1.0000 Recall 1.0000 F1 1.0000
+Sense classification--------------
+*Micro-Average precision 0.7206	recall 0.7206	F1 0.7206
+Causation    precision 0.9231	recall 0.5455	F1 0.6857
+Conditional  precision 1.0000	recall 1.0000	F1 1.0000
+Conjunction  precision 0.7279	recall 0.9321	F1 0.8175
+Contrast     precision 0.7273	recall 0.6667	F1 0.6957
+EntRel       precision 1.0000	recall 0.0000	F1 0.0000
+Expansion    precision 0.5593	recall 0.5690	F1 0.5641
+Progression  precision 1.0000	recall 0.0000	F1 0.0000
+Purpose      precision 1.0000	recall 0.6667	F1 0.8000
+Temporal     precision 1.0000	recall 1.0000	F1 1.0000
+Overall parser performance --------------
+Precision 0.7206 Recall 0.7206 F1 0.7206
+Evaluation for explicit discourse relations only
+Explicit connectives         : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg 1 extractor              : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg 2 extractor              : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg1 Arg2 extractor combined : Precision 1.0000 Recall 1.0000 F1 1.0000
+Sense classification--------------
+*Micro-Average precision 0.9351	recall 0.9351	F1 0.9351
+Causation    precision 1.0000	recall 1.0000	F1 1.0000
+Conditional  precision 1.0000	recall 1.0000	F1 1.0000
+Conjunction  precision 0.9375	recall 0.9375	F1 0.9375
+Contrast     precision 0.7273	recall 0.8889	F1 0.8000
+Expansion    precision 1.0000	recall 1.0000	F1 1.0000
+Progression  precision 1.0000	recall 0.0000	F1 0.0000
+Purpose      precision 1.0000	recall 1.0000	F1 1.0000
+Temporal     precision 1.0000	recall 1.0000	F1 1.0000
+Overall parser performance --------------
+Precision 0.9351 Recall 0.9351 F1 0.9351
+Evaluation for non-explicit discourse relations only (Implicit, EntRel, AltLex)
+Explicit connectives         : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg 1 extractor              : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg 2 extractor              : Precision 1.0000 Recall 1.0000 F1 1.0000
+Arg1 Arg2 extractor combined : Precision 1.0000 Recall 1.0000 F1 1.0000
+Sense classification--------------
+*Micro-Average precision 0.6667	recall 0.6667	F1 0.6667
+Causation    precision 0.6667	recall 0.1667	F1 0.2667
+Conditional  precision 1.0000	recall 1.0000	F1 1.0000
+Conjunction  precision 0.7012	recall 0.9312	F1 0.8000
+Contrast     precision 1.0000	recall 0.0000	F1 0.0000
+EntRel       precision 1.0000	recall 0.0000	F1 0.0000
+Expansion    precision 0.4800	recall 0.4898	F1 0.4848
+Purpose      precision 1.0000	recall 0.5000	F1 0.6667
+Overall parser performance --------------
+Precision 0.6667 Recall 0.6667 F1 0.6667

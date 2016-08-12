@@ -1,0 +1,1289 @@
+class_name: Model
+config:
+  input_layers:
+  - [arg1_ids, 0, 0]
+  - [arg2_ids, 0, 0]
+  - [conn_ids, 0, 0]
+  - [punc_ids, 0, 0]
+  layers:
+  - class_name: InputLayer
+    config:
+      batch_input_shape: !!python/tuple [null, 100]
+      input_dtype: int32
+      name: arg1_ids
+    inbound_nodes: []
+    name: arg1_ids
+  - class_name: InputLayer
+    config:
+      batch_input_shape: !!python/tuple [null, 100]
+      input_dtype: int32
+      name: arg2_ids
+    inbound_nodes: []
+    name: arg2_ids
+  - class_name: InputLayer
+    config:
+      batch_input_shape: !!python/tuple [null, 10]
+      input_dtype: int32
+      name: conn_ids
+    inbound_nodes: []
+    name: conn_ids
+  - class_name: InputLayer
+    config:
+      batch_input_shape: !!python/tuple [null, 2]
+      input_dtype: int32
+      name: punc_ids
+    inbound_nodes: []
+    name: punc_ids
+  - class_name: Embedding
+    config:
+      W_constraint: null
+      W_regularizer: null
+      activity_regularizer: null
+      batch_input_shape: !!python/tuple [null, null]
+      dropout: 0.3543889040084549
+      init: uniform
+      input_dim: 43918
+      input_dtype: int32
+      input_length: null
+      mask_zero: true
+      name: shared_emb
+      output_dim: 20
+      trainable: true
+    inbound_nodes:
+    - - [arg1_ids, 0, 0]
+    - - [arg2_ids, 0, 0]
+    - - [conn_ids, 0, 0]
+    - - [punc_ids, 0, 0]
+    name: shared_emb
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.18210894621865603, dropout_W: 0.4850461135349744,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_1, output_dim: 6, return_sequences: true,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [shared_emb, 0, 0]
+    name: gru_1
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.18210894621865603, dropout_W: 0.4850461135349744,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_15, output_dim: 6, return_sequences: true,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [shared_emb, 2, 0]
+    name: gru_15
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.18210894621865603, dropout_W: 0.4850461135349744,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_22, output_dim: 6, return_sequences: true,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [shared_emb, 3, 0]
+    name: gru_22
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.18210894621865603, dropout_W: 0.4850461135349744,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_8, output_dim: 6, return_sequences: true,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [shared_emb, 1, 0]
+    name: gru_8
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: &id001 {}
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_1
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_1
+      trainable: true
+    inbound_nodes:
+    - - [gru_1, 0, 0]
+    name: timedistributed_1
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_10
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_10
+      trainable: true
+    inbound_nodes:
+    - - [gru_8, 0, 0]
+    name: timedistributed_10
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_11
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_11
+      trainable: true
+    inbound_nodes:
+    - - [gru_8, 0, 0]
+    name: timedistributed_11
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_12
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_12
+      trainable: true
+    inbound_nodes:
+    - - [gru_8, 0, 0]
+    name: timedistributed_12
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_13
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_13
+      trainable: true
+    inbound_nodes:
+    - - [gru_15, 0, 0]
+    name: timedistributed_13
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_14
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_14
+      trainable: true
+    inbound_nodes:
+    - - [gru_15, 0, 0]
+    name: timedistributed_14
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_15
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_15
+      trainable: true
+    inbound_nodes:
+    - - [gru_15, 0, 0]
+    name: timedistributed_15
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_16
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_16
+      trainable: true
+    inbound_nodes:
+    - - [gru_15, 0, 0]
+    name: timedistributed_16
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_17
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_17
+      trainable: true
+    inbound_nodes:
+    - - [gru_15, 0, 0]
+    name: timedistributed_17
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_18
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_18
+      trainable: true
+    inbound_nodes:
+    - - [gru_15, 0, 0]
+    name: timedistributed_18
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_19
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_19
+      trainable: true
+    inbound_nodes:
+    - - [gru_22, 0, 0]
+    name: timedistributed_19
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_2
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_2
+      trainable: true
+    inbound_nodes:
+    - - [gru_1, 0, 0]
+    name: timedistributed_2
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_20
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_20
+      trainable: true
+    inbound_nodes:
+    - - [gru_22, 0, 0]
+    name: timedistributed_20
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_21
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_21
+      trainable: true
+    inbound_nodes:
+    - - [gru_22, 0, 0]
+    name: timedistributed_21
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_22
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_22
+      trainable: true
+    inbound_nodes:
+    - - [gru_22, 0, 0]
+    name: timedistributed_22
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_23
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_23
+      trainable: true
+    inbound_nodes:
+    - - [gru_22, 0, 0]
+    name: timedistributed_23
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_24
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_24
+      trainable: true
+    inbound_nodes:
+    - - [gru_22, 0, 0]
+    name: timedistributed_24
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_3
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_3
+      trainable: true
+    inbound_nodes:
+    - - [gru_1, 0, 0]
+    name: timedistributed_3
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_4
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_4
+      trainable: true
+    inbound_nodes:
+    - - [gru_1, 0, 0]
+    name: timedistributed_4
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_5
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_5
+      trainable: true
+    inbound_nodes:
+    - - [gru_1, 0, 0]
+    name: timedistributed_5
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_6
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_6
+      trainable: true
+    inbound_nodes:
+    - - [gru_1, 0, 0]
+    name: timedistributed_6
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_7
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_7
+      trainable: true
+    inbound_nodes:
+    - - [gru_8, 0, 0]
+    name: timedistributed_7
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_8
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_8
+      trainable: true
+    inbound_nodes:
+    - - [gru_8, 0, 0]
+    name: timedistributed_8
+  - class_name: TimeDistributed
+    config:
+      layer:
+        class_name: Lambda
+        config:
+          arguments: *id001
+          function: "c\x01\0\0\0\x01\0\0\0\x05\0\0\0\x13\0\0\0s&\0\0\0t\0\0j\x01\0\
+            |\0\0d\0\0d\0\0\N\x02\0\x88\0\0f\x02\0\x19t\x02\0d\x01\0d\x02\0\x83\x02\
+            \x01S(\x03\0\0\0Nt\x04\0\0\0axisi\xFF\xFF\xFF\xFF(\x03\0\0\0t\x01\0\0\0\
+            Kt\x0F\0\0\0repeat_elementst\t\0\0\0words_dim(\x01\0\0\0t\x01\0\0\0x(\x01\
+            \0\0\0t\x01\0\0\0i(\0\0\0\0s\x11\0\0\0/srv/v34/train.pyt\b\0\0\0<lambda>\xA7\
+            \x01\0\0s\0\0\0\0"
+          function_type: lambda
+          name: lambda_9
+          output_shape: !!binary |
+            YwEAAAABAAAAAgAAAFMAAABzDwAAAHwAAGQBACB0AABmAQAXUygCAAAATmkBAAAAKAEAAAB0CQAA
+            AHdvcmRzX2RpbSgBAAAAdAEAAABzKAAAAAAoAAAAAHMRAAAAL3Nydi92MzQvdHJhaW4ucHl0CAAA
+            ADxsYW1iZGE+pwEAAHMAAAAA
+          output_shape_type: lambda
+          trainable: true
+      name: timedistributed_9
+      trainable: true
+    inbound_nodes:
+    - - [gru_8, 0, 0]
+    name: timedistributed_9
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_1
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 0, 0]
+      - [timedistributed_1, 0, 0]
+    name: merge_1
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_10
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 1, 0]
+      - [timedistributed_10, 0, 0]
+    name: merge_10
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_11
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 1, 0]
+      - [timedistributed_11, 0, 0]
+    name: merge_11
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_12
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 1, 0]
+      - [timedistributed_12, 0, 0]
+    name: merge_12
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_13
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 2, 0]
+      - [timedistributed_13, 0, 0]
+    name: merge_13
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_14
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 2, 0]
+      - [timedistributed_14, 0, 0]
+    name: merge_14
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_15
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 2, 0]
+      - [timedistributed_15, 0, 0]
+    name: merge_15
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_16
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 2, 0]
+      - [timedistributed_16, 0, 0]
+    name: merge_16
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_17
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 2, 0]
+      - [timedistributed_17, 0, 0]
+    name: merge_17
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_18
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 2, 0]
+      - [timedistributed_18, 0, 0]
+    name: merge_18
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_19
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 3, 0]
+      - [timedistributed_19, 0, 0]
+    name: merge_19
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_2
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 0, 0]
+      - [timedistributed_2, 0, 0]
+    name: merge_2
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_20
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 3, 0]
+      - [timedistributed_20, 0, 0]
+    name: merge_20
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_21
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 3, 0]
+      - [timedistributed_21, 0, 0]
+    name: merge_21
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_22
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 3, 0]
+      - [timedistributed_22, 0, 0]
+    name: merge_22
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_23
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 3, 0]
+      - [timedistributed_23, 0, 0]
+    name: merge_23
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_24
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 3, 0]
+      - [timedistributed_24, 0, 0]
+    name: merge_24
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_3
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 0, 0]
+      - [timedistributed_3, 0, 0]
+    name: merge_3
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_4
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 0, 0]
+      - [timedistributed_4, 0, 0]
+    name: merge_4
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_5
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 0, 0]
+      - [timedistributed_5, 0, 0]
+    name: merge_5
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_6
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 0, 0]
+      - [timedistributed_6, 0, 0]
+    name: merge_6
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_7
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 1, 0]
+      - [timedistributed_7, 0, 0]
+    name: merge_7
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_8
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 1, 0]
+      - [timedistributed_8, 0, 0]
+    name: merge_8
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: mul
+      mode_type: raw
+      name: merge_9
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [shared_emb, 1, 0]
+      - [timedistributed_9, 0, 0]
+    name: merge_9
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_10, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_8, 0, 0]
+    name: gru_10
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_11, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_9, 0, 0]
+    name: gru_11
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_12, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_10, 0, 0]
+    name: gru_12
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_13, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_11, 0, 0]
+    name: gru_13
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_14, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_12, 0, 0]
+    name: gru_14
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_16, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_13, 0, 0]
+    name: gru_16
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_17, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_14, 0, 0]
+    name: gru_17
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_18, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_15, 0, 0]
+    name: gru_18
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_19, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_16, 0, 0]
+    name: gru_19
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_2, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_1, 0, 0]
+    name: gru_2
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_20, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_17, 0, 0]
+    name: gru_20
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_21, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_18, 0, 0]
+    name: gru_21
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_23, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_19, 0, 0]
+    name: gru_23
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_24, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_20, 0, 0]
+    name: gru_24
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_25, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_21, 0, 0]
+    name: gru_25
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_26, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_22, 0, 0]
+    name: gru_26
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_27, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_23, 0, 0]
+    name: gru_27
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_28, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_24, 0, 0]
+    name: gru_28
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_3, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_2, 0, 0]
+    name: gru_3
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_4, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_3, 0, 0]
+    name: gru_4
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_5, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_4, 0, 0]
+    name: gru_5
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_6, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_5, 0, 0]
+    name: gru_6
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_7, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_6, 0, 0]
+    name: gru_7
+  - class_name: GRU
+    config: {U_regularizer: null, W_regularizer: null, activation: tanh, b_regularizer: null,
+      consume_less: cpu, dropout_U: 0.4899141021546136, dropout_W: 0.16649459724958682,
+      go_backwards: false, init: glorot_uniform, inner_activation: hard_sigmoid, inner_init: orthogonal,
+      input_dim: 20, input_length: null, name: gru_9, output_dim: 50, return_sequences: false,
+      stateful: false, trainable: true, unroll: false}
+    inbound_nodes:
+    - - [merge_7, 0, 0]
+    name: gru_9
+  - class_name: Merge
+    config:
+      concat_axis: -1
+      dot_axes: [-1, -1]
+      mode: concat
+      mode_type: raw
+      name: merge_25
+      output_shape: null
+      output_shape_type: raw
+    inbound_nodes:
+    - - [gru_2, 0, 0]
+      - [gru_3, 0, 0]
+      - [gru_4, 0, 0]
+      - [gru_5, 0, 0]
+      - [gru_6, 0, 0]
+      - [gru_7, 0, 0]
+      - [gru_9, 0, 0]
+      - [gru_10, 0, 0]
+      - [gru_11, 0, 0]
+      - [gru_12, 0, 0]
+      - [gru_13, 0, 0]
+      - [gru_14, 0, 0]
+      - [gru_16, 0, 0]
+      - [gru_17, 0, 0]
+      - [gru_18, 0, 0]
+      - [gru_19, 0, 0]
+      - [gru_20, 0, 0]
+      - [gru_21, 0, 0]
+      - [gru_23, 0, 0]
+      - [gru_24, 0, 0]
+      - [gru_25, 0, 0]
+      - [gru_26, 0, 0]
+      - [gru_27, 0, 0]
+      - [gru_28, 0, 0]
+    name: merge_25
+  - class_name: Dense
+    config: {W_constraint: null, W_regularizer: null, activation: linear, activity_regularizer: null,
+      b_constraint: null, b_regularizer: null, init: glorot_uniform, input_dim: null,
+      name: dense_1, output_dim: 40, trainable: true}
+    inbound_nodes:
+    - - [merge_25, 0, 0]
+    name: dense_1
+  - class_name: SReLU
+    config: {a_left_init: glorot_uniform, a_right_init: one, name: srelu_1, t_left_init: zero,
+      t_right_init: glorot_uniform, trainable: true}
+    inbound_nodes:
+    - - [dense_1, 0, 0]
+    name: srelu_1
+  - class_name: Dropout
+    config: {name: dropout_1, p: 0.01608656108471007, trainable: true}
+    inbound_nodes:
+    - - [srelu_1, 0, 0]
+    name: dropout_1
+  - class_name: Dense
+    config: {W_constraint: null, W_regularizer: null, activation: linear, activity_regularizer: null,
+      b_constraint: null, b_regularizer: null, init: glorot_uniform, input_dim: null,
+      name: dense_2, output_dim: 22, trainable: true}
+    inbound_nodes:
+    - - [dropout_1, 0, 0]
+    name: dense_2
+  - class_name: Activation
+    config: {activation: softmax, name: rsenses_imp, trainable: true}
+    inbound_nodes:
+    - - [dense_2, 0, 0]
+    name: rsenses_imp
+  name: model_1
+  output_layers:
+  - [rsenses_imp, 0, 0]

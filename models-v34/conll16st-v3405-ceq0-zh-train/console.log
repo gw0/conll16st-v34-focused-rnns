@@ -1,0 +1,590 @@
+[2016-05-08 12:46] configuration (ex/conll16st-v3405-ceq0-zh-train)
+[2016-05-08 12:46]     config 'epochs':  (1000)
+[2016-05-08 12:46]     config 'epochs_len':  (-1)
+[2016-05-08 12:46]     config 'epochs_patience':  (20)
+[2016-05-08 12:46]     config 'batch_size':  (64)
+[2016-05-08 12:46]     config 'snapshot_size':  (2048)
+[2016-05-08 12:46]     config 'random_per_sample':  (32)
+[2016-05-08 12:46]     config 'words_dim':  (20)
+[2016-05-08 12:46]     config 'focus_dim':  (4)
+[2016-05-08 12:46]     config 'rnn_dim':  (20)
+[2016-05-08 12:46]     config 'final_dim':  (100)
+[2016-05-08 12:46]     config 'arg1_len': 500 (100)
+[2016-05-08 12:46]     config 'arg2_len': 500 (100)
+[2016-05-08 12:46]     config 'conn_len':  (10)
+[2016-05-08 12:46]     config 'punc_len':  (2)
+[2016-05-08 12:46]     config 'words_dropout':  (0.1)
+[2016-05-08 12:46]     config 'focus_dropout_W':  (0.33)
+[2016-05-08 12:46]     config 'focus_dropout_U':  (0.66)
+[2016-05-08 12:46]     config 'rnn_dropout_W':  (0.33)
+[2016-05-08 12:46]     config 'rnn_dropout_U':  (0.33)
+[2016-05-08 12:46]     config 'final_dropout':  (0.5)
+[2016-05-08 12:46]     config 'filter_fn_name': conn_eq_0 (conn_eq_0)
+[2016-05-08 12:46]     config 'words2vec_bin':  (None)
+[2016-05-08 12:46]     config 'words2vec_txt':  (None)
+[2016-05-08 12:46]   args.experiment_dir: ex/conll16st-v3405-ceq0-zh-train
+[2016-05-08 12:46]   args.train_dir: data/conll16st-zh-train
+[2016-05-08 12:46]   args.valid_dir: data/conll16st-zh-dev
+[2016-05-08 12:46]   K._config: {'epsilon': 1e-07, 'floatx': 'float32', 'backend': 'theano'}
+[2016-05-08 12:46]   os.getenv("THEANO_FLAGS"): None
+[2016-05-08 12:46]   filter_types: None
+[2016-05-08 12:46]   config: {u'arg2_len': 500, u'arg1_len': 500, u'filter_fn_name': u'conn_eq_0'}
+[2016-05-08 12:46] load dataset for training (data/conll16st-zh-train)
+[2016-05-08 12:46]   data/conll16st-zh-train: doc_ids: 455, words: 155827, rel_ids: 2445, relation tokens: 89568
+[2016-05-08 12:46] load dataset for validation (data/conll16st-zh-dev)
+[2016-05-08 12:46]   data/conll16st-zh-dev: doc_ids: 24, words: 6782, rel_ids: 82, relation tokens: 2679
+[2016-05-08 12:46] build indexes
+[2016-05-08 12:46]   rel_senses2id: 12, words2id: 14785
+[2016-05-08 12:46] build model
+[2016-05-08 12:46]     config 'rsenses_loss':  (categorical_crossentropy)
+____________________________________________________________________________________________________
+Layer (type)                       Output Shape        Param #     Connected to                     
+====================================================================================================
+arg1_ids (InputLayer)              (None, 500)         0                                            
+____________________________________________________________________________________________________
+arg2_ids (InputLayer)              (None, 500)         0                                            
+____________________________________________________________________________________________________
+conn_ids (InputLayer)              (None, 10)          0                                            
+____________________________________________________________________________________________________
+punc_ids (InputLayer)              (None, 2)           0                                            
+____________________________________________________________________________________________________
+shared_emb (Embedding)             multiple            295700      arg1_ids[0][0]                   
+                                                                   arg2_ids[0][0]                   
+                                                                   conn_ids[0][0]                   
+                                                                   punc_ids[0][0]                   
+____________________________________________________________________________________________________
+gru_1 (GRU)                        (None, 500, 4)      300         shared_emb[0][0]                 
+____________________________________________________________________________________________________
+gru_11 (GRU)                       (None, 10, 4)       300         shared_emb[2][0]                 
+____________________________________________________________________________________________________
+gru_16 (GRU)                       (None, 2, 4)        300         shared_emb[3][0]                 
+____________________________________________________________________________________________________
+gru_6 (GRU)                        (None, 500, 4)      300         shared_emb[1][0]                 
+____________________________________________________________________________________________________
+timedistributed_1 (TimeDistributed)(None, 500, 20)     0           gru_1[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_10 (TimeDistributed(None, 10, 20)      0           gru_11[0][0]                     
+____________________________________________________________________________________________________
+timedistributed_11 (TimeDistributed(None, 10, 20)      0           gru_11[0][0]                     
+____________________________________________________________________________________________________
+timedistributed_12 (TimeDistributed(None, 10, 20)      0           gru_11[0][0]                     
+____________________________________________________________________________________________________
+timedistributed_13 (TimeDistributed(None, 2, 20)       0           gru_16[0][0]                     
+____________________________________________________________________________________________________
+timedistributed_14 (TimeDistributed(None, 2, 20)       0           gru_16[0][0]                     
+____________________________________________________________________________________________________
+timedistributed_15 (TimeDistributed(None, 2, 20)       0           gru_16[0][0]                     
+____________________________________________________________________________________________________
+timedistributed_16 (TimeDistributed(None, 2, 20)       0           gru_16[0][0]                     
+____________________________________________________________________________________________________
+timedistributed_2 (TimeDistributed)(None, 500, 20)     0           gru_1[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_3 (TimeDistributed)(None, 500, 20)     0           gru_1[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_4 (TimeDistributed)(None, 500, 20)     0           gru_1[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_5 (TimeDistributed)(None, 500, 20)     0           gru_6[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_6 (TimeDistributed)(None, 500, 20)     0           gru_6[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_7 (TimeDistributed)(None, 500, 20)     0           gru_6[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_8 (TimeDistributed)(None, 500, 20)     0           gru_6[0][0]                      
+____________________________________________________________________________________________________
+timedistributed_9 (TimeDistributed)(None, 10, 20)      0           gru_11[0][0]                     
+____________________________________________________________________________________________________
+merge_1 (Merge)                    (None, 500, 20)     0           shared_emb[0][0]                 
+                                                                   timedistributed_1[0][0]          
+____________________________________________________________________________________________________
+merge_10 (Merge)                   (None, 10, 20)      0           shared_emb[2][0]                 
+                                                                   timedistributed_10[0][0]         
+____________________________________________________________________________________________________
+merge_11 (Merge)                   (None, 10, 20)      0           shared_emb[2][0]                 
+                                                                   timedistributed_11[0][0]         
+____________________________________________________________________________________________________
+merge_12 (Merge)                   (None, 10, 20)      0           shared_emb[2][0]                 
+                                                                   timedistributed_12[0][0]         
+____________________________________________________________________________________________________
+merge_13 (Merge)                   (None, 2, 20)       0           shared_emb[3][0]                 
+                                                                   timedistributed_13[0][0]         
+____________________________________________________________________________________________________
+merge_14 (Merge)                   (None, 2, 20)       0           shared_emb[3][0]                 
+                                                                   timedistributed_14[0][0]         
+____________________________________________________________________________________________________
+merge_15 (Merge)                   (None, 2, 20)       0           shared_emb[3][0]                 
+                                                                   timedistributed_15[0][0]         
+____________________________________________________________________________________________________
+merge_16 (Merge)                   (None, 2, 20)       0           shared_emb[3][0]                 
+                                                                   timedistributed_16[0][0]         
+____________________________________________________________________________________________________
+merge_2 (Merge)                    (None, 500, 20)     0           shared_emb[0][0]                 
+                                                                   timedistributed_2[0][0]          
+____________________________________________________________________________________________________
+merge_3 (Merge)                    (None, 500, 20)     0           shared_emb[0][0]                 
+                                                                   timedistributed_3[0][0]          
+____________________________________________________________________________________________________
+merge_4 (Merge)                    (None, 500, 20)     0           shared_emb[0][0]                 
+                                                                   timedistributed_4[0][0]          
+____________________________________________________________________________________________________
+merge_5 (Merge)                    (None, 500, 20)     0           shared_emb[1][0]                 
+                                                                   timedistributed_5[0][0]          
+____________________________________________________________________________________________________
+merge_6 (Merge)                    (None, 500, 20)     0           shared_emb[1][0]                 
+                                                                   timedistributed_6[0][0]          
+____________________________________________________________________________________________________
+merge_7 (Merge)                    (None, 500, 20)     0           shared_emb[1][0]                 
+                                                                   timedistributed_7[0][0]          
+____________________________________________________________________________________________________
+merge_8 (Merge)                    (None, 500, 20)     0           shared_emb[1][0]                 
+                                                                   timedistributed_8[0][0]          
+____________________________________________________________________________________________________
+merge_9 (Merge)                    (None, 10, 20)      0           shared_emb[2][0]                 
+                                                                   timedistributed_9[0][0]          
+____________________________________________________________________________________________________
+gru_10 (GRU)                       (None, 20)          2460        merge_8[0][0]                    
+____________________________________________________________________________________________________
+gru_12 (GRU)                       (None, 20)          2460        merge_9[0][0]                    
+____________________________________________________________________________________________________
+gru_13 (GRU)                       (None, 20)          2460        merge_10[0][0]                   
+____________________________________________________________________________________________________
+gru_14 (GRU)                       (None, 20)          2460        merge_11[0][0]                   
+____________________________________________________________________________________________________
+gru_15 (GRU)                       (None, 20)          2460        merge_12[0][0]                   
+____________________________________________________________________________________________________
+gru_17 (GRU)                       (None, 20)          2460        merge_13[0][0]                   
+____________________________________________________________________________________________________
+gru_18 (GRU)                       (None, 20)          2460        merge_14[0][0]                   
+____________________________________________________________________________________________________
+gru_19 (GRU)                       (None, 20)          2460        merge_15[0][0]                   
+____________________________________________________________________________________________________
+gru_2 (GRU)                        (None, 20)          2460        merge_1[0][0]                    
+____________________________________________________________________________________________________
+gru_20 (GRU)                       (None, 20)          2460        merge_16[0][0]                   
+____________________________________________________________________________________________________
+gru_3 (GRU)                        (None, 20)          2460        merge_2[0][0]                    
+____________________________________________________________________________________________________
+gru_4 (GRU)                        (None, 20)          2460        merge_3[0][0]                    
+____________________________________________________________________________________________________
+gru_5 (GRU)                        (None, 20)          2460        merge_4[0][0]                    
+____________________________________________________________________________________________________
+gru_7 (GRU)                        (None, 20)          2460        merge_5[0][0]                    
+____________________________________________________________________________________________________
+gru_8 (GRU)                        (None, 20)          2460        merge_6[0][0]                    
+____________________________________________________________________________________________________
+gru_9 (GRU)                        (None, 20)          2460        merge_7[0][0]                    
+____________________________________________________________________________________________________
+merge_17 (Merge)                   (None, 320)         0           gru_2[0][0]                      
+                                                                   gru_3[0][0]                      
+                                                                   gru_4[0][0]                      
+                                                                   gru_5[0][0]                      
+                                                                   gru_7[0][0]                      
+                                                                   gru_8[0][0]                      
+                                                                   gru_9[0][0]                      
+                                                                   gru_10[0][0]                     
+                                                                   gru_12[0][0]                     
+                                                                   gru_13[0][0]                     
+                                                                   gru_14[0][0]                     
+                                                                   gru_15[0][0]                     
+                                                                   gru_17[0][0]                     
+                                                                   gru_18[0][0]                     
+                                                                   gru_19[0][0]                     
+                                                                   gru_20[0][0]                     
+____________________________________________________________________________________________________
+dense_1 (Dense)                    (None, 100)         32100       merge_17[0][0]                   
+____________________________________________________________________________________________________
+srelu_1 (SReLU)                    (None, 100)         400         dense_1[0][0]                    
+____________________________________________________________________________________________________
+dropout_1 (Dropout)                (None, 100)         0           srelu_1[0][0]                    
+____________________________________________________________________________________________________
+dense_2 (Dense)                    (None, 12)          1212        dropout_1[0][0]                  
+____________________________________________________________________________________________________
+rsenses (Activation)               (None, 12)          0           dense_2[0][0]                    
+====================================================================================================
+Total params: 369972
+____________________________________________________________________________________________________
+[2016-05-08 12:46]     config 'optimizer':  (adam)
+[2016-05-08 12:47] initialize weights
+[2016-05-08 12:47] prepare snapshots
+[2016-05-08 12:47] train model
+Epoch 1/1000
+/usr/local/lib/python2.7/dist-packages/keras/engine/training.py:1397: UserWarning: Epoch comprised more than `samples_per_epoch` samples, which might affect learning results. Set `samples_per_epoch` correctly to avoid this warning.
+  warnings.warn('Epoch comprised more than '
+179s - loss: 0.6500 - acc: 0.9568 - val_loss: 3.6862 - val_acc: 0.0000e+00
+Epoch 2/1000
+182s - loss: 0.1021 - acc: 0.9697 - val_loss: 2.3899 - val_acc: 0.0000e+00
+Epoch 3/1000
+181s - loss: 0.0664 - acc: 0.9778 - val_loss: 2.0426 - val_acc: 0.3902
+Epoch 4/1000
+178s - loss: 0.0683 - acc: 0.9794 - val_loss: 1.9466 - val_acc: 0.3902
+Epoch 5/1000
+173s - loss: 0.0625 - acc: 0.9802 - val_loss: 1.8625 - val_acc: 0.3902
+Epoch 6/1000
+169s - loss: 0.0641 - acc: 0.9786 - val_loss: 1.8214 - val_acc: 0.3902
+Epoch 7/1000
+170s - loss: 0.0626 - acc: 0.9786 - val_loss: 1.8358 - val_acc: 0.3902
+Epoch 8/1000
+180s - loss: 0.0668 - acc: 0.9814 - val_loss: 1.8071 - val_acc: 0.3902
+Epoch 9/1000
+171s - loss: 0.0548 - acc: 0.9822 - val_loss: 1.7897 - val_acc: 0.3902
+Epoch 10/1000
+172s - loss: 0.0609 - acc: 0.9806 - val_loss: 1.7676 - val_acc: 0.3902
+Epoch 11/1000
+176s - loss: 0.0621 - acc: 0.9802 - val_loss: 1.7785 - val_acc: 0.3902
+Epoch 12/1000
+178s - loss: 0.0558 - acc: 0.9826 - val_loss: 1.6953 - val_acc: 0.3902
+Epoch 13/1000
+169s - loss: 0.0551 - acc: 0.9802 - val_loss: 1.5720 - val_acc: 0.4146
+Epoch 14/1000
+170s - loss: 0.0535 - acc: 0.9814 - val_loss: 1.4270 - val_acc: 0.5366
+Epoch 15/1000
+146s - loss: 0.0581 - acc: 0.9838 - val_loss: 1.3089 - val_acc: 0.5244
+Epoch 16/1000
+169s - loss: 0.0421 - acc: 0.9867 - val_loss: 1.2445 - val_acc: 0.5610
+Epoch 17/1000
+148s - loss: 0.0443 - acc: 0.9830 - val_loss: 1.2062 - val_acc: 0.5610
+Epoch 18/1000
+140s - loss: 0.0433 - acc: 0.9867 - val_loss: 1.1887 - val_acc: 0.5366
+Epoch 19/1000
+161s - loss: 0.0503 - acc: 0.9834 - val_loss: 1.1930 - val_acc: 0.5610
+Epoch 20/1000
+153s - loss: 0.0464 - acc: 0.9822 - val_loss: 1.1622 - val_acc: 0.5610
+Epoch 21/1000
+153s - loss: 0.0478 - acc: 0.9834 - val_loss: 1.1294 - val_acc: 0.6463
+Epoch 22/1000
+150s - loss: 0.0475 - acc: 0.9842 - val_loss: 1.1226 - val_acc: 0.5732
+Epoch 23/1000
+150s - loss: 0.0478 - acc: 0.9838 - val_loss: 1.1069 - val_acc: 0.6707
+Epoch 24/1000
+145s - loss: 0.0496 - acc: 0.9830 - val_loss: 1.1298 - val_acc: 0.6707
+Epoch 25/1000
+136s - loss: 0.0434 - acc: 0.9851 - val_loss: 1.0469 - val_acc: 0.5976
+Epoch 26/1000
+150s - loss: 0.0373 - acc: 0.9891 - val_loss: 1.0094 - val_acc: 0.6585
+Epoch 27/1000
+133s - loss: 0.0354 - acc: 0.9871 - val_loss: 0.9437 - val_acc: 0.6707
+Epoch 28/1000
+122s - loss: 0.0391 - acc: 0.9879 - val_loss: 0.8947 - val_acc: 0.6707
+Epoch 29/1000
+123s - loss: 0.0371 - acc: 0.9883 - val_loss: 0.8999 - val_acc: 0.6220
+Epoch 30/1000
+136s - loss: 0.0463 - acc: 0.9895 - val_loss: 0.8872 - val_acc: 0.6829
+Epoch 31/1000
+122s - loss: 0.0362 - acc: 0.9875 - val_loss: 0.8810 - val_acc: 0.6829
+Epoch 32/1000
+135s - loss: 0.0307 - acc: 0.9895 - val_loss: 0.8817 - val_acc: 0.6463
+Epoch 33/1000
+123s - loss: 0.0396 - acc: 0.9879 - val_loss: 0.8059 - val_acc: 0.7805
+Epoch 34/1000
+120s - loss: 0.0317 - acc: 0.9907 - val_loss: 0.7513 - val_acc: 0.8049
+Epoch 35/1000
+125s - loss: 0.0330 - acc: 0.9899 - val_loss: 0.7377 - val_acc: 0.7927
+Epoch 36/1000
+117s - loss: 0.0389 - acc: 0.9875 - val_loss: 0.7190 - val_acc: 0.7805
+Epoch 37/1000
+118s - loss: 0.0421 - acc: 0.9887 - val_loss: 0.7358 - val_acc: 0.7927
+Epoch 38/1000
+136s - loss: 0.0451 - acc: 0.9859 - val_loss: 0.7303 - val_acc: 0.7683
+Epoch 39/1000
+136s - loss: 0.0363 - acc: 0.9887 - val_loss: 0.7064 - val_acc: 0.8049
+Epoch 40/1000
+129s - loss: 0.0271 - acc: 0.9911 - val_loss: 0.6947 - val_acc: 0.7927
+Epoch 41/1000
+128s - loss: 0.0273 - acc: 0.9915 - val_loss: 0.6448 - val_acc: 0.8293
+Epoch 42/1000
+122s - loss: 0.0311 - acc: 0.9903 - val_loss: 0.6104 - val_acc: 0.8049
+Epoch 43/1000
+120s - loss: 0.0178 - acc: 0.9947 - val_loss: 0.5669 - val_acc: 0.8049
+Epoch 44/1000
+123s - loss: 0.0301 - acc: 0.9907 - val_loss: 0.6278 - val_acc: 0.7805
+Epoch 45/1000
+120s - loss: 0.0244 - acc: 0.9927 - val_loss: 0.6169 - val_acc: 0.7927
+Epoch 46/1000
+120s - loss: 0.0286 - acc: 0.9919 - val_loss: 0.5841 - val_acc: 0.7561
+Epoch 47/1000
+120s - loss: 0.0300 - acc: 0.9911 - val_loss: 0.5639 - val_acc: 0.8171
+Epoch 48/1000
+118s - loss: 0.0320 - acc: 0.9903 - val_loss: 0.5297 - val_acc: 0.8049
+Epoch 49/1000
+115s - loss: 0.0279 - acc: 0.9911 - val_loss: 0.5356 - val_acc: 0.8293
+Epoch 50/1000
+113s - loss: 0.0292 - acc: 0.9935 - val_loss: 0.5242 - val_acc: 0.8171
+Epoch 51/1000
+116s - loss: 0.0255 - acc: 0.9907 - val_loss: 0.5042 - val_acc: 0.8049
+Epoch 52/1000
+125s - loss: 0.0326 - acc: 0.9919 - val_loss: 0.5138 - val_acc: 0.8049
+Epoch 53/1000
+127s - loss: 0.0251 - acc: 0.9947 - val_loss: 0.5113 - val_acc: 0.8171
+Epoch 54/1000
+117s - loss: 0.0232 - acc: 0.9919 - val_loss: 0.4907 - val_acc: 0.8293
+Epoch 55/1000
+119s - loss: 0.0231 - acc: 0.9923 - val_loss: 0.4836 - val_acc: 0.8537
+Epoch 56/1000
+114s - loss: 0.0241 - acc: 0.9919 - val_loss: 0.4719 - val_acc: 0.8415
+Epoch 57/1000
+119s - loss: 0.0196 - acc: 0.9939 - val_loss: 0.4881 - val_acc: 0.8780
+Epoch 58/1000
+110s - loss: 0.0218 - acc: 0.9939 - val_loss: 0.4404 - val_acc: 0.8293
+Epoch 59/1000
+114s - loss: 0.0274 - acc: 0.9927 - val_loss: 0.4181 - val_acc: 0.8537
+Epoch 60/1000
+125s - loss: 0.0247 - acc: 0.9911 - val_loss: 0.4226 - val_acc: 0.8780
+Epoch 61/1000
+121s - loss: 0.0285 - acc: 0.9931 - val_loss: 0.4338 - val_acc: 0.8780
+Epoch 62/1000
+138s - loss: 0.0340 - acc: 0.9923 - val_loss: 0.4803 - val_acc: 0.8171
+Epoch 63/1000
+126s - loss: 0.0239 - acc: 0.9927 - val_loss: 0.4435 - val_acc: 0.8415
+Epoch 64/1000
+124s - loss: 0.0239 - acc: 0.9911 - val_loss: 0.4349 - val_acc: 0.8415
+Epoch 65/1000
+121s - loss: 0.0280 - acc: 0.9895 - val_loss: 0.4312 - val_acc: 0.8293
+Epoch 66/1000
+129s - loss: 0.0248 - acc: 0.9927 - val_loss: 0.4303 - val_acc: 0.8293
+Epoch 67/1000
+125s - loss: 0.0242 - acc: 0.9915 - val_loss: 0.4345 - val_acc: 0.8659
+Epoch 68/1000
+131s - loss: 0.0189 - acc: 0.9939 - val_loss: 0.4261 - val_acc: 0.8659
+Epoch 69/1000
+121s - loss: 0.0277 - acc: 0.9927 - val_loss: 0.4283 - val_acc: 0.8415
+Epoch 70/1000
+121s - loss: 0.0243 - acc: 0.9947 - val_loss: 0.4368 - val_acc: 0.8537
+Epoch 71/1000
+117s - loss: 0.0209 - acc: 0.9943 - val_loss: 0.3987 - val_acc: 0.8902
+Epoch 72/1000
+118s - loss: 0.0185 - acc: 0.9943 - val_loss: 0.3912 - val_acc: 0.8780
+Epoch 73/1000
+116s - loss: 0.0216 - acc: 0.9931 - val_loss: 0.3748 - val_acc: 0.9024
+Epoch 74/1000
+117s - loss: 0.0252 - acc: 0.9919 - val_loss: 0.3849 - val_acc: 0.9024
+Epoch 75/1000
+114s - loss: 0.0204 - acc: 0.9931 - val_loss: 0.3838 - val_acc: 0.9024
+Epoch 76/1000
+115s - loss: 0.0193 - acc: 0.9939 - val_loss: 0.4291 - val_acc: 0.8902
+Epoch 77/1000
+113s - loss: 0.0281 - acc: 0.9919 - val_loss: 0.4073 - val_acc: 0.8780
+Epoch 78/1000
+128s - loss: 0.0174 - acc: 0.9935 - val_loss: 0.4362 - val_acc: 0.8780
+Epoch 79/1000
+114s - loss: 0.0254 - acc: 0.9927 - val_loss: 0.4062 - val_acc: 0.8780
+Epoch 80/1000
+127s - loss: 0.0193 - acc: 0.9943 - val_loss: 0.3774 - val_acc: 0.8780
+Epoch 81/1000
+123s - loss: 0.0210 - acc: 0.9931 - val_loss: 0.3813 - val_acc: 0.8659
+Epoch 82/1000
+111s - loss: 0.0227 - acc: 0.9935 - val_loss: 0.3741 - val_acc: 0.8659
+Epoch 83/1000
+111s - loss: 0.0167 - acc: 0.9943 - val_loss: 0.3791 - val_acc: 0.8780
+Epoch 84/1000
+111s - loss: 0.0219 - acc: 0.9943 - val_loss: 0.3571 - val_acc: 0.8537
+Epoch 85/1000
+113s - loss: 0.0171 - acc: 0.9964 - val_loss: 0.3543 - val_acc: 0.8902
+Epoch 86/1000
+115s - loss: 0.0190 - acc: 0.9952 - val_loss: 0.3413 - val_acc: 0.9024
+Epoch 87/1000
+112s - loss: 0.0316 - acc: 0.9923 - val_loss: 0.3319 - val_acc: 0.8902
+Epoch 88/1000
+117s - loss: 0.0215 - acc: 0.9927 - val_loss: 0.3251 - val_acc: 0.8780
+Epoch 89/1000
+114s - loss: 0.0162 - acc: 0.9952 - val_loss: 0.3181 - val_acc: 0.8780
+Epoch 90/1000
+113s - loss: 0.0266 - acc: 0.9915 - val_loss: 0.3555 - val_acc: 0.9024
+Epoch 91/1000
+111s - loss: 0.0210 - acc: 0.9931 - val_loss: 0.3314 - val_acc: 0.9146
+Epoch 92/1000
+119s - loss: 0.0257 - acc: 0.9935 - val_loss: 0.3230 - val_acc: 0.9024
+Epoch 93/1000
+126s - loss: 0.0247 - acc: 0.9919 - val_loss: 0.3097 - val_acc: 0.9146
+Epoch 94/1000
+117s - loss: 0.0189 - acc: 0.9943 - val_loss: 0.3025 - val_acc: 0.8902
+Epoch 95/1000
+113s - loss: 0.0195 - acc: 0.9943 - val_loss: 0.3108 - val_acc: 0.8902
+Epoch 96/1000
+119s - loss: 0.0221 - acc: 0.9935 - val_loss: 0.3115 - val_acc: 0.9024
+Epoch 97/1000
+123s - loss: 0.0146 - acc: 0.9947 - val_loss: 0.3534 - val_acc: 0.8780
+Epoch 98/1000
+112s - loss: 0.0216 - acc: 0.9943 - val_loss: 0.2884 - val_acc: 0.9024
+Epoch 99/1000
+109s - loss: 0.0189 - acc: 0.9939 - val_loss: 0.2938 - val_acc: 0.9024
+Epoch 100/1000
+114s - loss: 0.0133 - acc: 0.9956 - val_loss: 0.2651 - val_acc: 0.9146
+Epoch 101/1000
+118s - loss: 0.0232 - acc: 0.9927 - val_loss: 0.2722 - val_acc: 0.9268
+Epoch 102/1000
+114s - loss: 0.0222 - acc: 0.9915 - val_loss: 0.2617 - val_acc: 0.9146
+Epoch 103/1000
+113s - loss: 0.0201 - acc: 0.9935 - val_loss: 0.3062 - val_acc: 0.8902
+Epoch 104/1000
+110s - loss: 0.0191 - acc: 0.9939 - val_loss: 0.3125 - val_acc: 0.9268
+Epoch 105/1000
+110s - loss: 0.0182 - acc: 0.9943 - val_loss: 0.3160 - val_acc: 0.8902
+Epoch 106/1000
+109s - loss: 0.0236 - acc: 0.9923 - val_loss: 0.3214 - val_acc: 0.9024
+Epoch 107/1000
+108s - loss: 0.0173 - acc: 0.9960 - val_loss: 0.2924 - val_acc: 0.9024
+Epoch 108/1000
+114s - loss: 0.0187 - acc: 0.9952 - val_loss: 0.2468 - val_acc: 0.9390
+Epoch 109/1000
+112s - loss: 0.0169 - acc: 0.9952 - val_loss: 0.2447 - val_acc: 0.9390
+Epoch 110/1000
+112s - loss: 0.0281 - acc: 0.9923 - val_loss: 0.2640 - val_acc: 0.9390
+Epoch 111/1000
+108s - loss: 0.0164 - acc: 0.9960 - val_loss: 0.2467 - val_acc: 0.9268
+Epoch 112/1000
+111s - loss: 0.0204 - acc: 0.9931 - val_loss: 0.2689 - val_acc: 0.9024
+Epoch 113/1000
+116s - loss: 0.0222 - acc: 0.9943 - val_loss: 0.2784 - val_acc: 0.9146
+Epoch 114/1000
+115s - loss: 0.0125 - acc: 0.9964 - val_loss: 0.2775 - val_acc: 0.8902
+Epoch 115/1000
+119s - loss: 0.0153 - acc: 0.9952 - val_loss: 0.3019 - val_acc: 0.9146
+Epoch 116/1000
+117s - loss: 0.0207 - acc: 0.9931 - val_loss: 0.2732 - val_acc: 0.9268
+Epoch 117/1000
+116s - loss: 0.0275 - acc: 0.9927 - val_loss: 0.2734 - val_acc: 0.9146
+Epoch 118/1000
+110s - loss: 0.0155 - acc: 0.9960 - val_loss: 0.2650 - val_acc: 0.9024
+Epoch 119/1000
+110s - loss: 0.0175 - acc: 0.9939 - val_loss: 0.2692 - val_acc: 0.9268
+Epoch 120/1000
+110s - loss: 0.0118 - acc: 0.9947 - val_loss: 0.2573 - val_acc: 0.9024
+Epoch 121/1000
+109s - loss: 0.0169 - acc: 0.9947 - val_loss: 0.2656 - val_acc: 0.9024
+Epoch 122/1000
+110s - loss: 0.0185 - acc: 0.9927 - val_loss: 0.2588 - val_acc: 0.9146
+Epoch 123/1000
+110s - loss: 0.0169 - acc: 0.9943 - val_loss: 0.2409 - val_acc: 0.9512
+Epoch 124/1000
+108s - loss: 0.0253 - acc: 0.9939 - val_loss: 0.2537 - val_acc: 0.9146
+Epoch 125/1000
+119s - loss: 0.0225 - acc: 0.9927 - val_loss: 0.2407 - val_acc: 0.9390
+Epoch 126/1000
+117s - loss: 0.0156 - acc: 0.9943 - val_loss: 0.2667 - val_acc: 0.9390
+Epoch 127/1000
+113s - loss: 0.0149 - acc: 0.9956 - val_loss: 0.2972 - val_acc: 0.9268
+Epoch 128/1000
+113s - loss: 0.0174 - acc: 0.9943 - val_loss: 0.2801 - val_acc: 0.9268
+Epoch 129/1000
+112s - loss: 0.0220 - acc: 0.9923 - val_loss: 0.2683 - val_acc: 0.9268
+Epoch 130/1000
+112s - loss: 0.0130 - acc: 0.9956 - val_loss: 0.2707 - val_acc: 0.9268
+Epoch 131/1000
+113s - loss: 0.0271 - acc: 0.9947 - val_loss: 0.2733 - val_acc: 0.9146
+Epoch 132/1000
+113s - loss: 0.0208 - acc: 0.9935 - val_loss: 0.2561 - val_acc: 0.9390
+Epoch 133/1000
+114s - loss: 0.0173 - acc: 0.9935 - val_loss: 0.2538 - val_acc: 0.9268
+Epoch 134/1000
+115s - loss: 0.0074 - acc: 0.9980 - val_loss: 0.2650 - val_acc: 0.9268
+Epoch 135/1000
+110s - loss: 0.0146 - acc: 0.9956 - val_loss: 0.2654 - val_acc: 0.9390
+Epoch 136/1000
+108s - loss: 0.0106 - acc: 0.9972 - val_loss: 0.2579 - val_acc: 0.9268
+Epoch 137/1000
+109s - loss: 0.0154 - acc: 0.9960 - val_loss: 0.2560 - val_acc: 0.9512
+Epoch 138/1000
+109s - loss: 0.0179 - acc: 0.9939 - val_loss: 0.2519 - val_acc: 0.9512
+Epoch 139/1000
+113s - loss: 0.0117 - acc: 0.9960 - val_loss: 0.2367 - val_acc: 0.9634
+Epoch 140/1000
+108s - loss: 0.0117 - acc: 0.9964 - val_loss: 0.2459 - val_acc: 0.9268
+Epoch 141/1000
+110s - loss: 0.0098 - acc: 0.9968 - val_loss: 0.2455 - val_acc: 0.9634
+Epoch 142/1000
+111s - loss: 0.0139 - acc: 0.9956 - val_loss: 0.2787 - val_acc: 0.9390
+Epoch 143/1000
+110s - loss: 0.0276 - acc: 0.9919 - val_loss: 0.2596 - val_acc: 0.9390
+Epoch 144/1000
+112s - loss: 0.0137 - acc: 0.9956 - val_loss: 0.2849 - val_acc: 0.9146
+Epoch 145/1000
+113s - loss: 0.0202 - acc: 0.9943 - val_loss: 0.2735 - val_acc: 0.9268
+Epoch 146/1000
+114s - loss: 0.0118 - acc: 0.9960 - val_loss: 0.2777 - val_acc: 0.9146
+Epoch 147/1000
+110s - loss: 0.0138 - acc: 0.9956 - val_loss: 0.2626 - val_acc: 0.9390
+Epoch 148/1000
+110s - loss: 0.0130 - acc: 0.9947 - val_loss: 0.2707 - val_acc: 0.9268
+Epoch 149/1000
+110s - loss: 0.0191 - acc: 0.9939 - val_loss: 0.2655 - val_acc: 0.9390
+Epoch 150/1000
+115s - loss: 0.0130 - acc: 0.9947 - val_loss: 0.2538 - val_acc: 0.9390
+Epoch 151/1000
+109s - loss: 0.0099 - acc: 0.9988 - val_loss: 0.2516 - val_acc: 0.9390
+Epoch 152/1000
+109s - loss: 0.0110 - acc: 0.9960 - val_loss: 0.2651 - val_acc: 0.9146
+Epoch 153/1000
+107s - loss: 0.0132 - acc: 0.9960 - val_loss: 0.2918 - val_acc: 0.9024
+Epoch 154/1000
+108s - loss: 0.0127 - acc: 0.9960 - val_loss: 0.2232 - val_acc: 0.9390
+Epoch 155/1000
+110s - loss: 0.0149 - acc: 0.9964 - val_loss: 0.2307 - val_acc: 0.9390
+Epoch 156/1000
+114s - loss: 0.0143 - acc: 0.9960 - val_loss: 0.2239 - val_acc: 0.9268
+Epoch 157/1000
+111s - loss: 0.0160 - acc: 0.9956 - val_loss: 0.2321 - val_acc: 0.9268
+Epoch 158/1000
+111s - loss: 0.0178 - acc: 0.9943 - val_loss: 0.2290 - val_acc: 0.9268
+Epoch 159/1000
+111s - loss: 0.0194 - acc: 0.9935 - val_loss: 0.2427 - val_acc: 0.9268
+Epoch 160/1000
+111s - loss: 0.0180 - acc: 0.9931 - val_loss: 0.2485 - val_acc: 0.9390
+Epoch 161/1000
+113s - loss: 0.0201 - acc: 0.9915 - val_loss: 0.2367 - val_acc: 0.9390
+Epoch 162/1000
+111s - loss: 0.0101 - acc: 0.9960 - val_loss: 0.2510 - val_acc: 0.9146
+Epoch 163/1000
+108s - loss: 0.0148 - acc: 0.9960 - val_loss: 0.2510 - val_acc: 0.9268
+Epoch 164/1000
+111s - loss: 0.0100 - acc: 0.9964 - val_loss: 0.2646 - val_acc: 0.9390
+Epoch 165/1000
+116s - loss: 0.0149 - acc: 0.9952 - val_loss: 0.2418 - val_acc: 0.9268
+Epoch 166/1000
+116s - loss: 0.0092 - acc: 0.9976 - val_loss: 0.2911 - val_acc: 0.8902
+Epoch 167/1000
+117s - loss: 0.0236 - acc: 0.9956 - val_loss: 0.2129 - val_acc: 0.9268
+Epoch 168/1000
+113s - loss: 0.0116 - acc: 0.9960 - val_loss: 0.2530 - val_acc: 0.9268
+Epoch 169/1000
+108s - loss: 0.0121 - acc: 0.9952 - val_loss: 0.2226 - val_acc: 0.9390
+Epoch 170/1000
+115s - loss: 0.0148 - acc: 0.9943 - val_loss: 0.2253 - val_acc: 0.9512
+Epoch 171/1000
+112s - loss: 0.0133 - acc: 0.9947 - val_loss: 0.2390 - val_acc: 0.9390
+Epoch 172/1000
+113s - loss: 0.0094 - acc: 0.9980 - val_loss: 0.2434 - val_acc: 0.9512
+Epoch 173/1000
+108s - loss: 0.0123 - acc: 0.9960 - val_loss: 0.2446 - val_acc: 0.9390
+Epoch 174/1000
+110s - loss: 0.0162 - acc: 0.9964 - val_loss: 0.2421 - val_acc: 0.9268
+Epoch 175/1000
+110s - loss: 0.0113 - acc: 0.9968 - val_loss: 0.2543 - val_acc: 0.9146
+Epoch 176/1000
+111s - loss: 0.0142 - acc: 0.9960 - val_loss: 0.2749 - val_acc: 0.9390
+Epoch 177/1000
+111s - loss: 0.0168 - acc: 0.9956 - val_loss: 0.2537 - val_acc: 0.9512
+Epoch 178/1000
+109s - loss: 0.0143 - acc: 0.9947 - val_loss: 0.2546 - val_acc: 0.9268
+Epoch 179/1000
+109s - loss: 0.0144 - acc: 0.9960 - val_loss: 0.2665 - val_acc: 0.9146
+Epoch 180/1000
+110s - loss: 0.0173 - acc: 0.9947 - val_loss: 0.2545 - val_acc: 0.9268
+Epoch 181/1000
+110s - loss: 0.0083 - acc: 0.9972 - val_loss: 0.2486 - val_acc: 0.9146
+Epoch 182/1000
+108s - loss: 0.0126 - acc: 0.9952 - val_loss: 0.2250 - val_acc: 0.9390
+Epoch 183/1000
+111s - loss: 0.0074 - acc: 0.9976 - val_loss: 0.2319 - val_acc: 0.9390
+Epoch 184/1000
+110s - loss: 0.0105 - acc: 0.9968 - val_loss: 0.2334 - val_acc: 0.9390
+Epoch 185/1000
+110s - loss: 0.0165 - acc: 0.9956 - val_loss: 0.3055 - val_acc: 0.9024
+Epoch 186/1000
+110s - loss: 0.0131 - acc: 0.9956 - val_loss: 0.2458 - val_acc: 0.9390
+Epoch 187/1000
+110s - loss: 0.0104 - acc: 0.9960 - val_loss: 0.2753 - val_acc: 0.9390
+Epoch 188/1000
+110s - loss: 0.0166 - acc: 0.9947 - val_loss: 0.2839 - val_acc: 0.9268
+[2016-05-08 19:21] training finished
+
+
+{"acc": 0.99474747975667321, "loss": -0.96341462833125413, "val_acc_max": 0.96341462833125413, "val_loss_min": 0.21294424446617685, "status": "ok", "val_acc": 0.92682926974645474, "loss_": 0.016585626904153893, "epochs_len": 188, "acc_max": 0.99878787994384766, "loss_min": 0.0074073110019467472, "val_loss": 0.28389830233120339}

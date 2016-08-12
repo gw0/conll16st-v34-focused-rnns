@@ -1,0 +1,88 @@
+Using Theano backend.
+[2016-05-08 21:16] configuration (./models-v34/conll16st-v3403-8c72dacfe3cce1d3f8889ccdbe197993)
+[2016-05-08 21:16]     config 'epochs':  (1000)
+[2016-05-08 21:16]     config 'epochs_len':  (-1)
+[2016-05-08 21:16]     config 'epochs_patience':  (20)
+[2016-05-08 21:16]     config 'batch_size':  (64)
+[2016-05-08 21:16]     config 'snapshot_size':  (2048)
+[2016-05-08 21:16]     config 'random_per_sample':  (32)
+[2016-05-08 21:16]     config 'words_dim': 30 (20)
+[2016-05-08 21:16]     config 'focus_dim': 4 (4)
+[2016-05-08 21:16]     config 'rnn_dim': 10 (20)
+[2016-05-08 21:16]     config 'final_dim': 90 (100)
+[2016-05-08 21:16]     config 'arg1_len':  (100)
+[2016-05-08 21:16]     config 'arg2_len':  (100)
+[2016-05-08 21:16]     config 'conn_len':  (10)
+[2016-05-08 21:16]     config 'punc_len':  (2)
+[2016-05-08 21:16]     config 'words_dropout':  (0.1)
+[2016-05-08 21:16]     config 'focus_dropout_W':  (0.33)
+[2016-05-08 21:16]     config 'focus_dropout_U':  (0.66)
+[2016-05-08 21:16]     config 'rnn_dropout_W':  (0.33)
+[2016-05-08 21:16]     config 'rnn_dropout_U':  (0.33)
+[2016-05-08 21:16]     config 'final_dropout':  (0.5)
+[2016-05-08 21:16]     config 'filter_fn_name': conn_eq_0 (conn_eq_0)
+[2016-05-08 21:16]     config 'words2vec_bin':  (None)
+[2016-05-08 21:16]     config 'words2vec_txt':  (None)
+[2016-05-08 21:16]   args.model_dir: ./models-v34/conll16st-v3403-8c72dacfe3cce1d3f8889ccdbe197993
+[2016-05-08 21:16]   args.dataset_dir: /media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29
+[2016-05-08 21:16]   args.output_dir: /tmp/gw0/2016-05-08-21-15-00/output
+[2016-05-08 21:16]   K._config: {u'epsilon': 1e-07, u'floatx': u'float32', u'backend': u'theano'}
+[2016-05-08 21:16]   os.getenv("THEANO_FLAGS"): None
+[2016-05-08 21:16]   filter_types: None
+[2016-05-08 21:16]   filter_senses: None
+[2016-05-08 21:16]   filter_fn_name: conn_eq_0
+[2016-05-08 21:16]   config: {u'focus_dim': 4, u'final_dim': 90, u'words_dim': 30, u'rnn_dim': 10, u'filter_fn_name': u'conn_eq_0'}
+[2016-05-08 21:16] load dataset for prediction (/media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29)
+[2016-05-08 21:17]   /media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29: doc_ids: 79, words: 39712, rel_ids: 699, relation tokens: 20137
+[2016-05-08 21:17]   rel_senses2id: 21, words2id: 43918
+[2016-05-08 21:17] build model
+[2016-05-08 21:17]     config 'rsenses_loss':  (categorical_crossentropy)
+[2016-05-08 21:17]     config 'optimizer':  (adam)
+[2016-05-08 21:17] previous weights (./models-v34/conll16st-v3403-8c72dacfe3cce1d3f8889ccdbe197993)
+[2016-05-08 21:17] convert from dataset (/media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29)
+[2016-05-08 21:17] make predictions
+[2016-05-08 21:18] convert predictions (/tmp/gw0/2016-05-08-21-15-00/output)
+Using Theano backend.
+[2016-05-08 21:18] configuration (./models-v34/conll16st-v3404-c60bcfa432d5a328876f327ef2bea88e)
+[2016-05-08 21:18]     config 'epochs':  (1000)
+[2016-05-08 21:18]     config 'epochs_len':  (-1)
+[2016-05-08 21:18]     config 'epochs_patience':  (20)
+[2016-05-08 21:18]     config 'batch_size':  (64)
+[2016-05-08 21:18]     config 'snapshot_size':  (2048)
+[2016-05-08 21:18]     config 'random_per_sample':  (32)
+[2016-05-08 21:18]     config 'words_dim': 20 (20)
+[2016-05-08 21:18]     config 'focus_dim': 6 (4)
+[2016-05-08 21:18]     config 'rnn_dim': 50 (20)
+[2016-05-08 21:18]     config 'final_dim': 40 (100)
+[2016-05-08 21:18]     config 'arg1_len':  (100)
+[2016-05-08 21:18]     config 'arg2_len':  (100)
+[2016-05-08 21:18]     config 'conn_len':  (10)
+[2016-05-08 21:18]     config 'punc_len':  (2)
+[2016-05-08 21:18]     config 'words_dropout':  (0.1)
+[2016-05-08 21:18]     config 'focus_dropout_W':  (0.33)
+[2016-05-08 21:18]     config 'focus_dropout_U':  (0.66)
+[2016-05-08 21:18]     config 'rnn_dropout_W':  (0.33)
+[2016-05-08 21:18]     config 'rnn_dropout_U':  (0.33)
+[2016-05-08 21:18]     config 'final_dropout':  (0.5)
+[2016-05-08 21:18]     config 'filter_fn_name': conn_gt_0 (conn_eq_0)
+[2016-05-08 21:18]     config 'words2vec_bin':  (None)
+[2016-05-08 21:18]     config 'words2vec_txt':  (None)
+[2016-05-08 21:18]   args.model_dir: ./models-v34/conll16st-v3404-c60bcfa432d5a328876f327ef2bea88e
+[2016-05-08 21:18]   args.dataset_dir: /media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29
+[2016-05-08 21:18]   args.output_dir: /tmp/gw0/2016-05-08-21-15-00/output
+[2016-05-08 21:18]   K._config: {u'epsilon': 1e-07, u'floatx': u'float32', u'backend': u'theano'}
+[2016-05-08 21:18]   os.getenv("THEANO_FLAGS"): None
+[2016-05-08 21:18]   filter_types: None
+[2016-05-08 21:18]   filter_senses: None
+[2016-05-08 21:18]   filter_fn_name: conn_gt_0
+[2016-05-08 21:18]   config: {u'focus_dim': 6, u'final_dim': 40, u'words_dim': 20, u'rnn_dim': 50, u'filter_fn_name': u'conn_gt_0'}
+[2016-05-08 21:18] load dataset for prediction (/media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29)
+[2016-05-08 21:19]   /media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29: doc_ids: 79, words: 39712, rel_ids: 737, relation tokens: 28745
+[2016-05-08 21:19]   rel_senses2id: 22, words2id: 43918
+[2016-05-08 21:19] build model
+[2016-05-08 21:19]     config 'rsenses_loss':  (categorical_crossentropy)
+[2016-05-08 21:19]     config 'optimizer':  (adam)
+[2016-05-08 21:19] previous weights (./models-v34/conll16st-v3404-c60bcfa432d5a328876f327ef2bea88e)
+[2016-05-08 21:19] convert from dataset (/media/training-datasets/discourse-relation-sense-classification/conll16-st-dev-en-2016-03-29)
+[2016-05-08 21:19] make predictions
+[2016-05-08 21:21] convert predictions (/tmp/gw0/2016-05-08-21-15-00/output)

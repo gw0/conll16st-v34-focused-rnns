@@ -1,0 +1,8 @@
+(dp1
+S'rel_senses2id'
+p2
+I22
+sS'words2id'
+p3
+I43918
+s.
