@@ -37,9 +37,9 @@ argp = argparse.ArgumentParser(description=__doc__.strip().split("\n", 1)[0])
 argp.add_argument('experiment_dir',
     help="directory for storing trained model and other resources")
 argp.add_argument('train_dir',
-    help="CoNLL15st dataset directory for training")
+    help="CoNLL16st dataset directory for training")
 argp.add_argument('valid_dir',
-    help="CoNLL15st dataset directory for validation")
+    help="CoNLL16st dataset directory for validation")
 argp.add_argument('--clean', action='store_true',
     help="clean previous experiment")
 argp.add_argument('--config', type=json.loads,
