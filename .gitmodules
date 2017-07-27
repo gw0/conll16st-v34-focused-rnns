@@ -1,6 +1,6 @@
 [submodule "conll16st_data"]
 	path = conll16st_data
-	url = ./conll16st_data/
+	url = https://github.com/gw0/conll16st_data
 [submodule "conll16st_evaluation"]
 	path = conll16st_evaluation
-	url = ./conll16st_evaluation/
+	url = https://github.com/gw0/conll16st_evaluation
